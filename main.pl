@@ -9,9 +9,9 @@ day(1).
 hour(0).
 
 /* Job Selection */
-jobSelect(1, 'Fisherman').
-jobSelect(2, 'Farmer').
-jobSelect(3, 'Rancher').
+jobSelect(1, fisherman).
+jobSelect(2, farmer).
+jobSelect(3, rancher).
 
 /* Status Player */
 
@@ -39,14 +39,14 @@ item(potato_seed, 0).
 nextDay :-
 	day(X),
 	Z is X+1,
+	retract(day(_)),
 	asserta(day(Z)),
-	retract(day(X)),
-	retract(hour(Y)),
+	retract(hour(_)),
 	asserta(hour(0)).
 	
 addHour(NUM) :-
 	retract(hour(X)),
-	Y = X+NUM,
+	Y is X + NUM,
 	assertz(hour(Y)).
 
 /* Prosedur Command 'start' untuk memulai game */
@@ -63,7 +63,6 @@ start :-
 	retractall(helpmenu(A)),
 	assertz(helpmenu(1),
 	!.
-start :- start.
 
 status :-
 	write('Your status:'), nl,
