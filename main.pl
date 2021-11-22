@@ -1,8 +1,15 @@
 :- dynamic(day/1).
 :- dynamic(hour/1).
 :- dynamic(job/1).
+:- dynamic(menu/1).
 :- dynamic(helpmenu/1).
+:- dynamic(diary/2).
 
+diary(0, 'Imma fuck your mom').
+diary(1, 'Imma fuck your mom').
+diary(3, 'Imma fuck your mom').
+
+menu(0).
 helpmenu(0).
 
 day(1).
@@ -67,6 +74,8 @@ start :-
 	write('You chose '), write(Y), write(', let\'s start farming!'),
 	retractall(helpmenu(_)),
 	assertz(helpmenu(1)),
+	retractall(menu(_)),
+	assertz(menu(1)),
 	!.
 
 status :-
@@ -81,6 +90,50 @@ status :-
 	expRanching(H), write('Exp Ranching: '), write(H), nl,
 	experience(I, J), write('Exp: '), write(I), write('/'), write(J), nl,
 	gold(K), write('Gold: '), write(K).
+
+diary_read_function :-
+	diary(X, _),
+	write('Day '), write(X), nl,
+	fail.
+
+house :-
+	repeat,
+	write('smth: '), nl,
+	write(''), nl,
+	write(''), nl,
+	write(''), nl,
+	write('input exit to get out of this menu'), nl,
+	read(X),
+	(
+    	atom_codes(sleep, X)
+	->
+		write('have slept'), nl,
+		nextDay,
+		!, true
+	;
+    	atom_codes(writeDiary, X)
+	->
+		read(Y),
+		day(Z),
+		assertz(diary(Z, Y)),
+		!, true
+	;
+    	atom_codes(readDiary, X)
+	->
+		\+ (diary_read_function),
+		read(Y),
+		day(Z),
+		diary(Z, W),
+		write(W),
+		!, true
+	;
+    	atom_codes(exit, X)
+	->
+		!, true
+	;
+		write('wrong input u dumdum'), nl
+	).
+
 
 exitGame :- halt(0).
 
