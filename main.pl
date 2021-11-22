@@ -45,9 +45,14 @@ nextDay :-
 	asserta(hour(0)).
 	
 addHour(NUM) :-
+	NUM < 24,
 	retract(hour(X)),
 	Y is X + NUM,
 	assertz(hour(Y)).
+
+addHour(NUM) :-
+	NUM >= 24,
+	nextDay.
 
 /* Prosedur Command 'start' untuk memulai game */
 start :-
@@ -60,8 +65,8 @@ start :-
 	retract(job('-')),
 	assertz(job(Y)),
 	write('You chose '), write(Y), write(', let\'s start farming!'),
-	retractall(helpmenu(A)),
-	assertz(helpmenu(1),
+	retractall(helpmenu(_)),
+	assertz(helpmenu(1)),
 	!.
 
 status :-
