@@ -1,3 +1,9 @@
+/* Kelompok Farming Tubes */
+/* 13520127 - Adzka Ahmadetya Zaidan */
+/* 13520129 - Nathanael Santoso */
+/* 13520152 - Muhammad Fahmi Irfan */
+/* 13520161 - M Syahrul Surya Putra */
+
 :- dynamic(day/1).
 :- dynamic(hour/1).
 :- dynamic(job/1).
