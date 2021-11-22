@@ -4,10 +4,11 @@
 :- dynamic(menu/1).
 :- dynamic(helpmenu/1).
 :- dynamic(diary/2).
+:- dynamic(item/2).
 
-diary(0, 'Imma fuck your mom').
-diary(1, 'Imma fuck your mom').
-diary(3, 'Imma fuck your mom').
+diary(0, 'text 1').
+diary(1, 'text 2').
+diary(3, 'text 3').
 
 menu(0).
 helpmenu(0).
@@ -35,10 +36,10 @@ gold(0).
 
 /* List Item, jumlah yang ada dalam inventory player */
 
-item(carrot_seed, 0).
-item(corn_seed, 0).
-item(tomato_seed, 0).
-item(potato_seed, 0).
+item(1, 'Carrot Seed').
+item(0, 'Corn Seed').
+item(3, 'Tomato Seed').
+item(2, 'Potato Seed').
 
 /* Prosedur dan rule */
 
@@ -182,3 +183,13 @@ help :-
 	write('|| 10. quest       : mengambil quest jika berada pada tile quest               ||'), nl,
 	write('|| 11. help        : menampilkan segala bantuan                                ||'), nl,
 	write('|| 12. exitGame    : keluar dari permainan                                     ||'), nl.
+	
+inInven(Y) :-
+	item(X, Y),
+	X > 0,
+	write(X), write(' '), write(Y), nl,
+	inInven(\+ Y).
+	
+inventory :-
+	write('Your Inventory'), nl,
+	inInven(Y).
