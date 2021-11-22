@@ -13,23 +13,14 @@ jobSelect(3, 'Rancher').
 /* Status Player */
 
 job('-').
-
 level(1).
-
 levelFarming(1).
-
 expFarming(0).
-
 levelFishing(1).
-
 expFishing(0).
-
 levelRanching(1).
-
 expRanching(0).
-
 experience(0, 300).
-
 gold(0).
 
 /* List Item, jumlah yang ada dalam inventory player */
@@ -66,7 +57,6 @@ start :-
 	retract(job('-')),
 	assertz(job(Y)),
 	write('You chose '), write(Y), write(', let\'s start farming!'),
-	/* Di sini harusnya ganti job jadi Y, tapi blm tau gmn caranya... */
 	!.
 start :- start.
 
