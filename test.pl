@@ -1,6 +1,9 @@
 :- dynamic(day/1).
 :- dynamic(hour/1).
 :- dynamic(job/1).
+:- dynamic(helpmenu/1).
+
+helpmenu(0).
 
 day(1).
 hour(0).
@@ -57,6 +60,8 @@ start :-
 	retract(job('-')),
 	assertz(job(Y)),
 	write('You chose '), write(Y), write(', let\'s start farming!'),
+	retractall(helpmenu(A)),
+	assertz(helpmenu(1),
 	!.
 start :- start.
 
@@ -72,3 +77,51 @@ status :-
 	expRanching(H), write('Exp Ranching: '), write(H), nl,
 	experience(I, J), write('Exp: '), write(I), write('/'), write(J), nl,
 	gold(K), write('Gold: '), write(K).
+
+exitGame :- halt(0).
+
+help :-
+	help(X),
+	X is 0,
+	write('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%'), nl,
+	write('%                              ~Harvest Star~                                  %'), nl,
+	write('% 1. start  : untuk memulai petualanganmu                                      %'), nl,
+	write('% 2. map    : menampilkan peta                                                 %'), nl,
+	write('% 3. status : menampilkan kondisimu terkini                                    %'), nl,
+	write('% 4. w      : gerak ke utara 1 langkah                                         %'), nl,
+	write('% 5. s      : gerak ke selatan 1 langkah                                       %'), nl,
+	write('% 6. d      : gerak ke ke timur 1 langkah                                      %'), nl,
+	write('% 7. a      : gerak ke barat 1 langkah                                         %'), nl,
+	write('% 8. help   : menampilkan segala bantuan                                       %'), nl,
+	write('% (status seharusnya hanya ada 1)                                              %'), nl,
+	write('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%'), nl.
+
+help :-
+	help(X),
+	X is 1,
+	write('|| 1. map         : menampilkan peta                                           ||'), nl,
+	write('||    - w           : gerak ke utara 1 langkah                                 ||'), nl,
+	write('||    - s           : gerak ke selatan 1 langkah                               ||'), nl,
+	write('||    - d           : gerak ke ke timur 1 langkah                              ||'), nl,
+	write('||    - a           : gerak ke barat 1 langkah                                 ||'), nl,
+	write('|| 2. dig         : menggali tanah agar bisa ditanami                          ||'), nl,
+	write('|| 3. plant       : menanam bibit pada lahan yang sudah digali                 ||'), nl,
+	write('|| 4. harvest     : memanen tanaman yang sudah ditanam                         ||'), nl,
+	write('|| 5. fish        : memancing ikan jika di dekat air                           ||'), nl,
+	write('|| 6. ranch       : membuka menu ranching jika berada di tile ranch            ||'), nl,
+	write('||    - chicken     : mengambil hasil ternak ayam                              ||'), nl,
+	write('||    - sheep       : mengambil hasil ternak domba                             ||'), nl,
+	write('||    - cow         : mengambil hasil ternak sapi                              ||'), nl,
+	write('|| 7. marketplace : menampilkan menu marketplace                               ||'), nl,
+	write('||    - buy         : membeli barang yang dijual pada marketplace              ||'), nl,
+	write('||    - sell        : menjual hasil budidaya                                   ||'), nl,
+	write('|| 8. house       : menampilkan menu pada rumah                                ||'), nl,
+	write('||    - sleep       : tidur dan perpindah waktu menjadi keesokan hari          ||'), nl,
+	write('||    - writeDiary  : menulis pada diary                                       ||'), nl,
+	write('||    - readDiary   : membaca tulisan pada diary                               ||'), nl,
+	write('|| 9. inventory   : menampilkan isi inventory                                  ||'), nl,
+	write('||    - useItem     : menggunakan item tertentu yang bisa digunakan            ||'), nl,
+	write('||    - throwItem   : membuang item tertentu                                   ||'), nl,
+	write('|| 10. quest       : mengambil quest jika berada pada tile quest               ||'), nl,
+	write('|| 11. help        : menampilkan segala bantuan                                ||'), nl,
+	write('|| 12. exitGame    : keluar dari permainan                                     ||'), nl.
