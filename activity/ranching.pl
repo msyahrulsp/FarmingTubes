@@ -1,9 +1,9 @@
 :- dynamic(animal/2).
 :- dynamic(produce/3).
 
-animal(2, 'chicken').
-animal(1, 'cow').
-animal(1, 'sheep').
+animal(1, 'chicken').
+animal(0, 'cow').
+animal(0, 'sheep').
 
 produce('chicken', 'Egg', 1).
 produce('cow', 'Milk Bucket', 1).
@@ -14,21 +14,26 @@ produce('sheep', 'Wool Sack', 1).
    - tidak berada di ranch -> tampilin pesan not in ranch
    - berada di ranch -> tampilin binatang -> harvest/exit */
 ranch :-
-    % Add: Add a verification if player is at ranch position
-    nl, write('Welcome to the ranch, you have:'), nl,
-    \+(listAnimals), nl,
-    write('Which animal will you harvest? (To exit enter "0" or "exit")'), nl,
-    read(Pin), nl,
     (
-        (Pin is 0; toLower(Pin, In), atom_chars(In, Code), atom_chars(exit, Code))
+        onTile(ranch)
     ->
-        write('You have exited the ranch.'), nl, !
+        nl, write('Welcome to the ranch, you have:'), nl,
+        \+(listAnimals), nl,
+        write('Which animal will you harvest? (To exit enter "0" or "exit")'), nl,
+        read(Pin), nl,
+        (
+            (Pin is 0; toLower(Pin, In), atom_chars(In, Code), atom_chars(exit, Code))
+        ->
+            write('You have exited the ranch.'), nl, !
+        ;
+            toLower(Pin, In), animalHarvest(In), !
+        ;
+            write('You tried to find the animal "'), write(In), write('", but you couldn\'t find it.'), nl,
+            !, fail
+	    )
     ;
-    	toLower(Pin, In), animalHarvest(In), !
-	;
-		write('You tried to find the animal "'), write(In), write('", but you couldn\'t find it.'), nl,
-        !, fail
-	).
+        nl, write('You are not at the ranch.'), nl
+    ).
 
 /* Function to list animals
    Alur umum:
@@ -110,22 +115,3 @@ cooldown(Animal) :-
         C is Day + 1
     ),
     retractall(produce(Animal, _, _)), assertz(produce(Animal, Product, C)).
-
-/* Lowercase Conversion */
-toLower(X, Y) :-
-    atom_chars(X, List),
-    lowerCase(List, Lower), !,
-    atom_chars(Y, Lower).
-lowerCase([], []).
-lowerCase([Head| Tail], [Lower| Ltail]) :-
-    lower_upper(Lower, Head),
-    lowerCase(Tail, Ltail).
-
-/* Pluralization */
-plural(X, Y) :-
-    atom_chars(X, List),
-    addPlur(List, Plur), !,
-    atom_chars(Y, Plur).
-addPlur([], ['s']).
-addPlur([Head| Tail], [Head| Ptail]) :-
-    addPlur(Tail, Ptail).

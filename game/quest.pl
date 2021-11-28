@@ -14,7 +14,7 @@ quests('corn', 2, 'nila', 2, 'egg', 2).
    - Jika tidak dipanggil di tile quest -> menjabarkan current quest
    */
 quest :-
-    (isQuest -> getQuest; displayQuest), !.
+    (onTile(quest) -> getQuest; displayQuest), !.
 
 /* Funtion to get new Quest
    Alur Umum:
@@ -83,7 +83,3 @@ displayQuest :-
         nl, write('You have not activated any quests, try going to the Questgiver to get a quest'), nl, nl
     ), !.
 
-/* Funtion to verify tile */
-% Add: Tile Verification Dibawah sementara
-isQuest :-
-    player(X, Y), quest(X, Y).

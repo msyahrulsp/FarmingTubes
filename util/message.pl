@@ -62,3 +62,31 @@ msg_help :-
 	write('|| 12. quit       :  keluar dari permainan                                     ||'), nl,
 	write('|+-----------------------------------------------------------------------------+|'), nl,
 	write('+-------------------------------------------------------------------------------+'), nl.
+
+
+/* Lowercase Conversion */
+toLower(X, Y) :-
+    atom_chars(X, List),
+    lowerCase(List, Lower), !,
+    atom_chars(Y, Lower).
+lowerCase([], []).
+lowerCase([Head| Tail], [Lower| Ltail]) :-
+    lower_upper(Lower, Head),
+    lowerCase(Tail, Ltail).
+
+/* Pluralization */
+plural(X, Y) :-
+    atom_chars(X, List),
+    addPlur(List, Plur), !,
+    atom_chars(Y, Plur).
+addPlur([], ['s']).
+addPlur([Head| Tail], [Head| Ptail]) :-
+    addPlur(Tail, Ptail).
+
+/* Capitalization */
+toCaps(X, Y) :-
+    atom_chars(X, List),
+    capitalize(List, Caps), !,
+    atom_chars(Y, Caps).
+capitalize([Head| Tail], [Cap| Tail]) :-
+    lower_upper(Head, Cap).
