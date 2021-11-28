@@ -1,52 +1,77 @@
 :- dynamic(gold/1).
 :- dynamic(item/2).
 
+
 /* List Item, jumlah yang ada dalam inventory player */
 
+/* Gold dan prosedur untuk menunjukkan jumlah gold yang dimiliki */
 gold :- gold(X), write('Gold: '), write(X).
-
 gold(0).
 
+/* Jumlah item pada inventory, nama item */
 item(1, 'Level 1 Shovel').
 item(1, 'Level 1 Fishing Rod').
-item(0, 'Carrot Seed').
-item(0, 'Corn Seed').
-item(1, 'Tomato Seed').
+item(2, 'Carrot Seed').
+item(1, 'Corn Seed').
+item(0, 'Tomato Seed').
 item(0, 'Potato Seed').
-item(0, 'Chicken').
+item(1, 'Chicken').
 item(0, 'Sheep').
 item(0, 'Cow').
 item(0, 'Level 2 Shovel').
 item(0, 'Level 2 Fishing Rod').
 
-/* Sellable Items */
-
+/* Sellable Items - dipisah supaya lebih mudah melihat barang apa yang dapat dijual vs barang apa yang tidak bisa dijual. */
 item(1, 'Carrot').
-item(3, 'Corn').
+item(0, 'Corn').
 item(0, 'Tomato').
-item(1, 'Potato').
+item(0, 'Potato').
 item(0, 'Egg').
+item(0, 'Wool Sack').
+item(0, 'Milk Bucket').
+item(0, 'C Fish').
+item(0, 'B Fish').
+item(0, 'A Fish').
+item(0, 'S Fish').
 
-/* Nama Item, Harga */
+/* Nama Item, Sell Price */
 sellable('Carrot', 100).
-sellable('Corn', 100).
-sellable('Tomato', 100).
-sellable('Potato', 100).
+sellable('Corn', 150).
+sellable('Tomato', 125).
+sellable('Potato', 80).
 sellable('Egg', 100).
+sellable('Wool Sack', 250).
+sellable('Milk Bucket', 375).
+sellable('C Fish', 75).
+sellable('B Fish', 125).
+sellable('A Fish', 225).
+sellable('S Fish', 350).
+
 
 /* Prosedur */
 
-inInven(Y) :-
-	item(X, Y), X > 0,
-	write(X), write(' '), write(Y), nl,
-    % Dikasih fail untuk maksa backtracking
-	fail.
+/* Prosedur buat ganti jumlah gold dan item */
 
-sellableInInven(Y) :-
-	item(X, Y), sellable(Y, _), X > 0,
-	write('- '), write(X), write(' '), write(Y), nl,
-    % Dikasih fail buat enforced backtracking
-	fail.
+giveGold(X) :-
+	retract(gold(Y)),
+	Z is Y + X,
+	assertz(gold(Z)).
+	
+takeGold(X) :-
+	retract(gold(Y)),
+	Z is Y - X,
+	assertz(gold(Z)).
+	
+addItem(A, B) :- 
+	retract(item(X, B)),
+	C is X + A,
+	assertz(item(C, B)).
+
+removeItem(A, B) :- 
+	retract(item(X, B)),
+	C is X - A,
+	assertz(item(C, B)).
+
 
 /* COMMAND inventory */
 inventory :-
@@ -54,11 +79,18 @@ inventory :-
     % Dikasih not biar yes akhirnya karena pasti kembaliin no
 	\+(inInven(Y)).
 
-/* COMMAND throwItem WIP */
+inInven(Y) :-
+	item(X, Y), X > 0,
+	write(X), write(' '), write(Y), nl,
+    % Dikasih fail untuk maksa backtracking
+	fail.
+
+
+/* COMMAND throwItem */
 throwItem :-
 	inventory,
-	write('- [Enter 0 to Exit Shop]'), nl,
-	nl, write('What do you want to throw? '), read(I),
+	nl, write('[Enter 0 to Exit Shop]'), nl,
+	nl, write('What do you want to throw? (Example: \'Item Name\'.) '), read(I),
 	(
 		(I \== 0)
 	->
@@ -72,18 +104,20 @@ throwItem :-
 throwItem :- throwItem.
 
 throwHowMuch(X, I) :- 
-	write('You have '), write(X), write(' '), write(I) ,write(' How many do you want to throw? '), read(N),
+	write('You have '), write(X), write(' '), write(I) ,write('. How many do you want to throw? '), read(N),
 	N >= 0,
 	X >= N, !, nl,
 	write('You threw away '), write(N), write(' '), write(I), write('.'), nl,
 	removeItem(N, I).
 throwHowMuch(X, I) :- throwHowMuch(X, I).
 
+
 /* Dipanggil saat masuk Market */
 marketMenu :-
 	write('What do you want to do?'), nl,
 	write('1. Buy'), nl,
 	write('2. Sell').
+
 
 /* COMMAND buy */
 /* kondisi yang perlu ditambahkan: player harus sedang berada di dalam market */
@@ -98,7 +132,7 @@ buy :-
 	write('8. Level 2 Shovel (300 golds)'), nl,
 	write('9. Level 2 Fishing Rod (500 golds)'), nl,
 	write('0. [Exit Shop]'), nl, nl,
-	write('What do you want to buy? '), read(X), buySomething(X), !.
+	write('What do you want to buy? (Enter a Number) '), read(X), buySomething(X), !.
 buy :- buy.
 	
 buySomething(X) :- X is 1, cost(50, 'Carrot Seed').
@@ -136,28 +170,7 @@ checkIfEnough(X, Z, I) :-
 	G < C,
 	write('Not enough gold.'), nl, nl, !,
 	buy.
-
-/* Prosedur memudahkan hidup */
-
-/* CHEAT giveGold */
-giveGold(X) :-
-	retract(gold(Y)),
-	Z is Y + X,
-	assertz(gold(Z)).
-takeGold(X) :-
-	retract(gold(Y)),
-	Z is Y - X,
-	assertz(gold(Z)).
 	
-addItem(A, B) :- 
-	retract(item(X, B)),
-	C is X + A,
-	assertz(item(C, B)).
-	
-removeItem(A, B) :- 
-	retract(item(X, B)),
-	C is X - A,
-	assertz(item(C, B)).
 
 /* COMMAND sell */	
 /* kondisi yang perlu ditambahkan: player harus sedang berada di dalam market */
@@ -166,8 +179,8 @@ sell :-
 	write('Here are the items in your inventory'), nl,
     % Diganti jadi negasi karena failure driven
 	\+(sellableInInven(Y)),
-	write('- [Enter 0 to Exit Shop]'), nl,
-	nl, write('What do you want to sell? '), read(I),
+	nl, write('[Enter 0 to Exit Shop]'), nl,
+	nl, write('What do you want to sell? (Example: \'Item Name\'.) '), read(I),
     % ini mending dikasih if aja sih, tapi terserah km implementnya gimana
     % If tuh ky: (Kondisi(X) -> Something; Kondisi(Y) -> Smth)
 	(
@@ -183,6 +196,12 @@ sell :-
 	).
 sell :- sell.
 
+sellableInInven(Y) :-
+	item(X, Y), sellable(Y, _), X > 0,
+	write('- '), write(X), write(' '), write(Y), nl,
+    % Dikasih fail buat enforced backtracking
+	fail.
+	
 sellHowMuch(X, I, V) :- 
 	write('How many do you want to sell? '), read(N),
 	N >= 0,

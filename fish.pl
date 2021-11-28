@@ -1,10 +1,10 @@
 :- dynamic(miss/1).
 :- dynamic(chance/2).
 
-fish_type(1,'C fish').
-fish_type(2,'B fish').
-fish_type(3,'A fish').
-fish_type(4,'S fish').
+fish_type(1,'C Fish').
+fish_type(2,'B Fish').
+fish_type(3,'A Fish').
+fish_type(4,'S Fish').
 
 chance(1,0.5).
 chance(2,0.1).
