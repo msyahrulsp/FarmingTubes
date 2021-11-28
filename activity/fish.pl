@@ -42,7 +42,7 @@ fish :-
    M = miss (pity); Jumlah ikan tidak spesial berturut-turut yang diperoleh
    C = Chance mendapatkan ikan (semakin tinggi level fishing akan semakin tinggi)
    */
-    map_water(W), isNear(W),
+    nearWater,
     random(R),
     bonus_chance(BC),
     BonusChance is 1 + BC,
@@ -70,13 +70,16 @@ fish :-
 
     /* DOUBLE FISH! */
     random(Double),
-    (   Double =< 0.01
-    ->  nl,write('===DOUBLE FISH==='), nl, write(' YOU ARE ON FIRE!!'),nl,fish
-    ;   Double is Double),
-    !.
+    (
+        Double =< 0.01
+    ->
+        nl, write('===DOUBLE FISH==='), nl, write(' YOU ARE ON FIRE!!'), nl, fish
+    ;
+        true
+    ), !.
 
 fish :-
-    map_water(W), isNear(W),
+    nearWater,
     write('You got nothing!'), nl,
     miss(M),
     M1 is M+1,

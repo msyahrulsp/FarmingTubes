@@ -1,14 +1,14 @@
 :- dynamic(map_object/3).
 
-map_wall('#').
-map_default('-').
-map_player('P').
-map_marketplace('M').
-map_ranch('R').
-map_house('H').
-map_quest('Q').
-map_water('o').
-map_digged('=').
+map_elmt(wall, '#').
+map_elmt(default, '-').
+map_elmt(player, 'P').
+map_elmt(marketplace, 'M').
+map_elmt(ranch, 'R').
+map_elmt(house, 'H').
+map_elmt(quest, 'Q').
+map_elmt(water, 'o').
+map_elmt(digged, '=').
 
 map_size(10).
 
@@ -19,7 +19,7 @@ map_generate_water(NX, 0, _, Y) :-
 map_generate_water(0, _, _, _) :- !.
 
 map_generate_water(NX, NY, X, Y) :-
-    map_water(W),
+    map_elmt(water, W),
     asserta(map_object(X, Y, W)),
     NewX is X + 1,
     NewNX is NX - 1,
@@ -36,7 +36,7 @@ map_generate :-
 
 % Border kiri
 map_draw(X, Y) :-
-    map_size(M), map_wall(W),
+    map_size(M), map_elmt(wall, W),
     X =:= 0, Y =< M + 1,
     write(W), write(' '),
     DX is X + 1,
@@ -44,7 +44,7 @@ map_draw(X, Y) :-
 
 % Border kanan
 map_draw(X, Y) :-
-    map_size(M), map_wall(W),
+    map_size(M), map_elmt(wall, W),
     X =:= M + 1, Y =< M + 1,
     write(W), nl,
     DY is Y + 1,
@@ -52,7 +52,7 @@ map_draw(X, Y) :-
 
 % Border atas
 map_draw(X, Y) :-
-    map_size(M), map_wall(W),
+    map_size(M), map_elmt(wall, W),
     X < M + 1, Y =:= 0,
     write(W), write(' '),
     DX is X + 1,
@@ -60,7 +60,7 @@ map_draw(X, Y) :-
 
 % Border bawah
 map_draw(X, Y) :-
-    map_size(M), map_wall(W),
+    map_size(M), map_elmt(wall, W),
     X < M + 1, Y =:= M + 1,
     write(W), write(' '),
     DX is X + 1,
@@ -68,7 +68,7 @@ map_draw(X, Y) :-
 
 % Object
 map_draw(X, Y) :-
-    map_size(M), map_default(D),
+    map_size(M), map_elmt(default, D),
     X < M + 1, Y < M + 1,
     (\+ map_object(X, Y, _)),
     write(D), write(' '),
@@ -86,37 +86,51 @@ map_draw(X, Y) :-
 % Done map_draw
 map_draw(_, _) :- !.
 
-map :- 
-    game_start(true),
-    map_draw(0, 0).
-
 map :-
-    msg_not_start(MSG), write(MSG), nl.
+    (
+        game_start(true)
+    ->
+        nl, write('map:'), nl, nl,
+        map_draw(0, 0)
+    ;
+        msg_not_start(MSG), write(MSG), nl
+    ), !.
 
 % Buat move
 valid_move(DX, DY) :-
-    map_player(P), map_object(X, Y, P), map_size(M), map_water(W),
+    map_elmt(player, P), map_object(X, Y, P), map_size(M), map_elmt(water, W),
     DisX is DX + X, DisY is DY + Y,
     DisX < M + 1, DisX > 0, DisY < M + 1, DisY > 0, 
     \+map_object(DisX, DisY, W).
 
+/* deprecated
 % Buat Fishing
 isNear(Obj) :-
-    map_player(P), map_object(X, Y, P),
+    map_elmt(player, P), map_object(X, Y, P),
     DX is X - 1, map_object(DX, Y, Obj1),
     Obj == Obj1.
 
 isNear(Obj) :-
-    map_player(P), map_object(X, Y, P),
+    map_elmt(player, P), map_object(X, Y, P),
     DX is X + 1, map_object(DX, Y, Obj1),
     Obj == Obj1.
 
 isNear(Obj) :-
-    map_player(P), map_object(X, Y, P),
+    map_elmt(player, P), map_object(X, Y, P),
     DY is Y - 1, map_object(X, DY, Obj1),
     Obj == Obj1.
 
 isNear(Obj) :-
-    map_player(P), map_object(X, Y, P),
+    map_elmt(player, P), map_object(X, Y, P),
     DY is Y + 1, map_object(X, DY, Obj1),
     Obj == Obj1.
+*/
+
+% Locators
+nearWater :-
+    map_object(Px, Py, 'P'), map_object(Wx, Wy, 'o'),
+    (Px == Wx + 1; Px == Wx - 1),
+    (Py == Wy + 1; Py == Wy - 1).
+
+onTile(Tile_name) :-
+    map_object(X, Y, 'P'), map_object(X, Y, Tile), map_elmt(Tile_name, Tile).
