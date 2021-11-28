@@ -11,9 +11,10 @@ item(0, 'Carrot Seed').
 item(0, 'Corn Seed').
 item(1, 'Tomato Seed').
 item(0, 'Potato Seed').
-item(0, 'Chicken').
-item(0, 'Sheep').
-item(0, 'Cow').
+% Ini udh diganti jadi animal, aneh ga sih kalo binatang jadi item, bebas sih
+% item(0, 'Chicken').
+% item(0, 'Sheep').
+% item(0, 'Cow').
 item(0, 'Level 2 Shovel').
 item(0, 'Level 2 Fishing Rod').
 
@@ -24,6 +25,8 @@ item(3, 'Corn').
 item(0, 'Tomato').
 item(1, 'Potato').
 item(0, 'Egg').
+item(0, 'Milk Bucket').
+item(0, 'Wool Sack').
 
 /* Nama Item, Harga */
 sellable('Carrot', 100).
@@ -31,6 +34,8 @@ sellable('Corn', 100).
 sellable('Tomato', 100).
 sellable('Potato', 100).
 sellable('Egg', 100).
+sellable('Milk Bucket', 100).
+sellable('Wool Sack', 100).
 
 /* Prosedur */
 
