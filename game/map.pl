@@ -12,15 +12,27 @@ map_digged('=').
 
 map_size(10).
 
-map_generate_water :-
-    !.
+map_generate_water(NX, 0, _, Y) :- 
+    NewY is Y - 1,
+    map_generate_water(NX, 3, 1, NewY).
+
+map_generate_water(0, _, _, _) :- !.
+
+map_generate_water(NX, NY, X, Y) :-
+    map_water(W),
+    asserta(map_object(X, Y, W)),
+    NewX is X + 1,
+    NewNX is NX - 1,
+    NewNY is NY - 1,
+    map_generate_water(NewNX, NewNY, NewX, Y).
 
 map_generate :-
     asserta(map_object(2, 1, 'M')),
     asserta(map_object(8, 5, 'R')),
     asserta(map_object(4, 4, 'H')),
     asserta(map_object(5, 7, 'Q')),
-    map_generate_water.
+    map_size(M),
+    map_generate_water(8, 3, 1, M).
 
 % Border kiri
 map_draw(X, Y) :-
@@ -92,19 +104,19 @@ valid_move(DX, DY) :-
 isNear(Obj) :-
     map_player(P), map_object(X, Y, P),
     DX is X - 1, map_object(DX, Y, Obj1),
-    Obj =:= Obj1.
+    Obj == Obj1.
 
 isNear(Obj) :-
     map_player(P), map_object(X, Y, P),
     DX is X + 1, map_object(DX, Y, Obj1),
-    Obj =:= Obj1.
+    Obj == Obj1.
 
 isNear(Obj) :-
     map_player(P), map_object(X, Y, P),
     DY is Y - 1, map_object(X, DY, Obj1),
-    Obj =:= Obj1.
+    Obj == Obj1.
 
 isNear(Obj) :-
     map_player(P), map_object(X, Y, P),
     DY is Y + 1, map_object(X, DY, Obj1),
-    Obj =:= Obj1.
+    Obj == Obj1.

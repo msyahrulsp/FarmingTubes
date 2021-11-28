@@ -42,6 +42,7 @@ fish :-
    M = miss (pity); Jumlah ikan tidak spesial berturut-turut yang diperoleh
    C = Chance mendapatkan ikan (semakin tinggi level fishing akan semakin tinggi)
    */
+    map_water(W), isNear(W),
     random(R),
     bonus_chance(BC),
     BonusChance is 1 + BC,
@@ -66,7 +67,7 @@ fish :-
         set_miss(M1)),
     miss(A),
     write('Missed Special Fish : '), write(A),nl,
-    
+
     /* DOUBLE FISH! */
     random(Double),
     (   Double =< 0.01
@@ -75,11 +76,15 @@ fish :-
     !.
 
 fish :-
+    map_water(W), isNear(W),
     write('You got nothing!'), nl,
     miss(M),
     M1 is M+1,
     set_miss(M1),
     write('Missed Special Fish : '), write(M1).
+
+fish :-
+    msg_fish_not_near(MSG), write(MSG), nl.
 
 increase_chance_level :-
 /* I.S. Level Fishing terdefinisi
