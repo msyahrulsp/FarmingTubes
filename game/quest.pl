@@ -1,31 +1,8 @@
-:- dynamic(item/2).
-:- dynamic(quests/6).
-:- dynamic(q_ongoing/1).
 :- dynamic(q_done/1).
-:- dynamic(exp/2).
-:- dynamic(gold/1).
-:- dynamic(quest/2).
-
-gold(0).
-
-jobSelect(0, base).
-jobSelect(1, fisherman).
-jobSelect(2, farmer).
-jobSelect(3, rancher).
-
-job(base).
-exp(0, base).
-exp(0, fisherman).
-exp(0, farmer).
-exp(0, rancher).
+:- dynamic(q_ongoing/1).
+:- dynamic(quests/6).
 
 q_done(0).
-player(1, 1).
-quest(1, 1).
-
-item(2, 'corn').
-item(1, 'nila').
-item(1, 'egg').
 
 /* List of Quests in order dalam format quest(nama_item, jumlah, nama_item, jumlah, nama_item, jumlah) */
 quests('corn', 2, 'nila', 1, 'egg', 1).

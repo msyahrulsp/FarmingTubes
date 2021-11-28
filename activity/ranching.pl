@@ -101,7 +101,7 @@ animalHarvest(In) :-
    - Jika job \== Masukan -> Increment Exp biasa */
 cooldown(Animal) :-
     produce(Animal, Product, Cd), day(Day),
-    getLevel(3, Level),
+    getLevel(3, Level, _),
     Cd_new is Day + 10 - Level,
     (
         Cd_new > Day, C is Cd_new
@@ -110,43 +110,6 @@ cooldown(Animal) :-
         C is Day + 1
     )
     retractall(produce(Animal, _, _)), assertz(produce(Animal, Product, C)).
-
-/* Funtion add exp:
-   Alur Umum:
-   - Jika job sama dengan nomor job masukan -> Increment Exp * 2
-   - Jika job \== Masukan -> Increment Exp biasa */
-addExp(Job_number) :-
-    job(X), jobSelect(Job_number, Job),
-    (
-        X == Job
-    ->
-        % Add: Formula same job sementara
-        Inc is 200
-    ;
-        Inc is 100
-    ), !,
-    exp(Exp, Job),
-    Added is Exp + Inc,
-    retractall(exp(_, Job)),
-    assertz(exp(Added, Job)),
-    write('Your '), write(Job), write(' experience has increased by '), write(Inc), write('.'), nl.
-
-/* Function get level of job:
-   Alur umum:
-   - Jika job sama dengan nomor job masukan dan job masukan bukan nol -> tampilkan level job
-   - Jika nol -> Tampilkan level semua */
-getLevel(Job_number, Level) :-
-    jobSelect(Job_number, Job),
-    (
-        Job == base
-    ->
-        findall(X, exp(X, _), List),
-        sumlist(List, Exp)
-    ;
-        exp(Exp, Job)
-    ),
-    % Add: Level Formula, berikut yang sementara
-    Level is Exp // 300 + 1.
 
 /* Lowercase Conversion */
 toLower(X, Y) :-

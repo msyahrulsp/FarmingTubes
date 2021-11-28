@@ -1,20 +1,21 @@
 :- dynamic(exp/2).
-:- dynamic(incExp/1).
 :- dynamic(job/1).
 
 % Add: Harus di Rewrite ini, deprecated
 status :-
 	write('Your status:'), nl,
+    write('============================================='), nl,
 	job(A), write('Job: '), write(A), nl,
-	level(B), write('Level: '), write(B), nl,
-	levelFarming(C), write('Level Farming: '), write(C), nl,
-	expFarming(D), write('Exp Farming: '), write(D), nl,
-	levelFishing(E), write('Level Fishing: '), write(E), nl,
-	expFishing(F), write('Exp Fishing: '), write(F), nl,
-	levelRanching(G), write('Level Ranching: '), write(G), nl,
-	expRanching(H), write('Exp Ranching: '), write(H), nl,
-	experience(I, J), write('Exp: '), write(I), write('/'), write(J), nl,
+	getLevel(0, B, I), write('Level: '), write(B), nl,
+	getLevel(1, C, D), write('Level Farming: '), write(C), nl,
+	write('Exp Farming: '), write(D), write(' / 300'), nl,
+	getLevel(2, E, F), write('Level Fishing: '), write(E), nl,
+	write('Exp Fishing: '), write(F), write(' / 300'), nl,
+	getLevel(3, G, H), write('Level Ranching: '), write(G), nl,
+	write('Exp Ranching: '), write(H), write(' / 300'), nl,
+	write('Total Exp: '), write(I), write(' / 300'), nl,
 	gold(K), write('Gold: '), write(K).
+    write('============================================='), nl,
 
 /* Job Selection */
 jobSelect(0, base).
@@ -28,6 +29,7 @@ exp(0, fisherman).
 exp(0, farmer).
 exp(0, rancher).
 
+
 /* Funtion add exp:
    Alur Umum:
    - Jika job sama dengan nomor job masukan -> Increment Exp * 2
@@ -37,12 +39,12 @@ addExp(Job_number) :-
     (
         X == Job
     ->
-        exp(Exp, Job), incExp(Get),
         % Add: Formula same job sementara
-        Inc is Get + Get
+        Inc is 200
     ;
-        exp(Exp, Job), incExp(Inc)
+        Inc is 100
     ), !,
+    exp(Exp, Job),
     Added is Exp + Inc,
     retractall(exp(_, Job)),
     assertz(exp(Added, Job)),
@@ -52,7 +54,7 @@ addExp(Job_number) :-
    Alur umum:
    - Jika job sama dengan nomor job masukan dan job masukan bukan nol -> tampilkan level job
    - Jika nol -> Tampilkan level semua */
-getLevel(Job_number, Level) :-
+getLevel(Job_number, Level, Remainder) :-
     jobSelect(Job_number, Job),
     (
         Job == base
@@ -63,4 +65,5 @@ getLevel(Job_number, Level) :-
         exp(Exp, Job)
     ),
     % Add: Level Formula, berikut yang sementara
-    Level is Exp // 300 + 1.
+    Level is Exp // 300 + 1,
+    Remainder is Exp mod 300.

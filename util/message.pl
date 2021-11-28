@@ -55,6 +55,6 @@ msg_help :-
 	write('|| 9. inventory   : menampilkan isi inventory                                  ||'), nl,
 	write('||    - useItem     : menggunakan item tertentu yang bisa digunakan            ||'), nl,
 	write('||    - throwItem   : membuang item tertentu                                   ||'), nl,
-	write('|| 10. quest       : mengambil quest jika berada pada tile quest               ||'), nl,
-	write('|| 11. help        : menampilkan segala bantuan                                ||'), nl,
-	write('|| 12. exitGame    : keluar dari permainan                                     ||'), nl.
+	write('|| 10. quest      :  mengambil quest jika berada pada tile quest               ||'), nl,
+	write('|| 11. help       :  menampilkan segala bantuan                                ||'), nl,
+	write('|| 12. exitGame   :  keluar dari permainan                                     ||'), nl.

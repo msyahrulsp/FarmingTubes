@@ -21,6 +21,7 @@ startGame :-
 	['./game/items.pl'],
 	['./game/map.pl'],
 	['./game/player.pl'],
+	['./game/quest.pl'],
 	['./game/time.pl'],
 	['./util/message.pl'],
 	msg_title,
