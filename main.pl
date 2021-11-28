@@ -11,6 +11,10 @@
 :- dynamic(helpmenu/1).
 :- dynamic(diary/2).
 :- dynamic(item/2).
+:- dynamic(exp/2).
+:- dynamic(incExp/1).
+
+incExp(100).
 
 diary(0, 'text 1').
 diary(1, 'text 2').
@@ -23,22 +27,60 @@ day(1).
 hour(0).
 
 /* Job Selection */
+jobSelect(0, base).
 jobSelect(1, fisherman).
 jobSelect(2, farmer).
 jobSelect(3, rancher).
 
 /* Status Player */
 
-job('-').
-level(1).
-levelFarming(1).
-expFarming(0).
-levelFishing(1).
-expFishing(0).
-levelRanching(1).
-expRanching(0).
-experience(0, 300).
+job(base).
+exp(0, base).
+exp(0, fisherman).
+exp(0, farmer).
+exp(0, rancher).
+% level(1). -> Ini diubah jadi fungsi aja
+% levelRanching(1). ^
+% levelFarming(1).  ^
+% levelFishing(1).  ^ 
 gold(0).
+
+/* Funtion add exp:
+   Alur Umum:
+   - Jika job sama dengan nomor job masukan -> Increment Exp * 2
+   - Jika job \== Masukan -> Increment Exp biasa */
+addExp(Job_number) :-
+    job(X), jobSelect(Job_number, Job),
+    (
+        X == Job
+    ->
+        exp(Exp, Job), incExp(Get),
+        % Add: Formula same job sementara
+        Inc is Get + Get
+    ;
+        exp(Exp, Job), incExp(Inc)
+    ), !,
+    Added is Exp + Inc,
+    retractall(exp(_, Job)),
+    assertz(exp(Added, Job)),
+    write('Your '), write(Job), write(' experience has increased by '), write(Inc), write('.'), nl.
+
+/* Function get level of job:
+   Alur umum:
+   - Jika job sama dengan nomor job masukan dan job masukan bukan nol -> tampilkan level job
+   - Jika nol -> Tampilkan level semua */
+getLevel(Job_number, Level) :-
+    jobSelect(Job_number, Job),
+    (
+        Job == base
+    ->
+        findall(X, exp(X, _), List),
+        sumlist(List, Exp)
+    ;
+        exp(Exp, Job)
+    ),
+    % Add: Level Formula, berikut yang sementara
+    Level is Exp // 300 + 1.
 
 /* List Item, jumlah yang ada dalam inventory player */
 
@@ -74,8 +116,10 @@ start :-
 	write('1. Fisherman'), nl,
 	write('2. Farmer'), nl,
 	write('3. Rancher'), nl,
+	% Add: Harus kasih if biar ga error
 	read(X),
 	jobSelect(X, Y),
+	% End Add
 	retract(job('-')),
 	assertz(job(Y)),
 	write('You chose '), write(Y), write(', let\'s start farming!'),
@@ -85,6 +129,7 @@ start :-
 	assertz(menu(1)),
 	!.
 
+% Add: Harus di Rewrite ini, deprecated
 status :-
 	write('Your status:'), nl,
 	job(A), write('Job: '), write(A), nl,
