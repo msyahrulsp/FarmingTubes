@@ -19,6 +19,7 @@ ranch :-
     ->
         nl, write('Welcome to the ranch, you have:'), nl,
         \+(listAnimals), nl,
+        repeat,
         write('Which animal will you harvest? (To exit enter "0" or "exit")'), nl,
         read(Pin), nl,
         (
@@ -28,11 +29,10 @@ ranch :-
         ;
             toLower(Pin, In), animalHarvest(In), !
         ;
-            write('You tried to find the animal "'), write(In), write('", but you couldn\'t find it.'), nl,
-            !, fail
+            write('You tried to find the animal "'), write(Pin), write('", but you couldn\'t find it.'), nl, fail
 	    )
     ;
-        nl, write('You are not at the ranch.'), nl
+        nl, write('You are not at the ranch.'), nl, !, fail
     ).
 
 /* Function to list animals
@@ -41,7 +41,7 @@ ranch :-
    - Ada binatang -> tampilin semua dengan metode failure driven */
 listAnimals :-
     \+ (animal(Num, _), Num \== 0),
-    nl, write('You have no animals yet, buy them from the shop'), !.
+    nl, write('You have no animals yet, buy them from the shop.'), !.
 
 listAnimals :-
     animal(X, Y), X > 0,
@@ -91,14 +91,14 @@ animalHarvest(In) :-
             % Jika harvest hanya satu
             write(Y), write(' from your '), write(X)
         ), write('.'), nl, nl,
+        addTime(3),
         cooldown(X),
-        addExp(3)
+        addJobExp(3)
     ;
         % Jika tidak ada
         plural(X, Xs), 
         write('You don\'t have any '), write(Xs), write('.'), nl
-    ),
-    !.
+    ), !.
 
 /* Funtion cooldown:
    Alur Umum:
@@ -107,7 +107,7 @@ animalHarvest(In) :-
 cooldown(Animal) :-
     produce(Animal, Product, _), day(Day),
     getLevel(3, Level, _),
-    Cd_new is Day + 10 - Level,
+    Cd_new is Day + 8 - Level,
     (
         Cd_new > Day, C is Cd_new
     ;

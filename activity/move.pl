@@ -71,7 +71,8 @@ move_player(Mov) :-
         ->
             Mx is X + Dx, My is Y + Dy,
             retract(map_object(X, Y, P)), asserta(map_object(Mx, My, P)),
-            msg_move(Mov, MSG), write(MSG)
+            msg_move(Mov, MSG), write(MSG),
+            addTime(1)
         ;
             msg_move('E', MSG), write(MSG)
         )
