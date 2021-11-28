@@ -1,87 +1,125 @@
 :- dynamic(miss/1).
 :- dynamic(chance/2).
+:- dynamic(bonus_chance/1).
 
-fish_type(1,'C Fish').
-fish_type(2,'B Fish').
-fish_type(3,'A Fish').
-fish_type(4,'S Fish').
+fish_type(1,'Snelt','C').
+fish_type(2,'Rainbob','B').
+fish_type(3,'Arna','A').
+fish_type(4,'Sharkshark','S').
+fish_type(5,'Big Sharkshark','SS').
+fish_type(6,'Super Big Sharkshark','SSR').
 
-chance(1,0.5).
-chance(2,0.1).
-chance(3,0.05).
+chance(6,0).
+chance(5,0).
 chance(4,0).
+chance(3,0.05).
+chance(2,0.1).
+chance(1,0.5).
+
+bonus_chance(0).
 
 miss(0).
 
-%sekalian jadi cheatcode
 set_miss(X) :-
+% untuk set nilai miss
     retract(miss(_)),
     asserta(miss(X)).
 
 fish :-
+/* I.S. Game sedang berjalan, command 'fish' dimasukkan user
+   F.S. Berhasil memancing, ikan yang didapat ialah bergantung pada nilai R
+   Proses :
+   R akan digenerate secara random
+   Jika M >= 50, maka R akan dikali 0.01 (dijamin dapat minimal S jika chance S > 0)
+   R akan dibandingkan mulai dari Chance ikan yang paling langka ke yang paling umum
+   Jika ada jenis ikan yang Chance-nya lebih besar dari R, maka pemain mendapatkan ikan tersebut
+   Jika tidak ada, maka pemain tidak mendapatkan ikan,
+   Jika pemain mendapatkan ikan >=S, nilai miss akan direset, jika tidak miss akan bertambah
+   Jika pemain mendapatkan ikan apapun, akan ada kemungkinan mendapatkan ikan tambahan
+   KAMUS
+   R = nilai random yang menentukan ikan yang diperoleh
+   BC = Bonus Chance dari Fishing Rod
+   M = miss (pity); Jumlah ikan tidak spesial berturut-turut yang diperoleh
+   C = Chance mendapatkan ikan (semakin tinggi level fishing akan semakin tinggi)
+   */
     random(R),
+    bonus_chance(BC),
+    BonusChance is 1 + BC,
     (   miss(M), 
         chance(4,C),
         C > 0,
-        M = 50
-    ->  write('You got '),
-        fish_type(4, Fish),
-        write(Fish),
-        nl,
-        set_miss(0)
-    ;(   chance(4,C), R =< C
-    ->  write('You got '),
-        fish_type(4, Fish),
-        write(Fish),
-        nl,
-        set_miss(0)
-    ;(  chance(3,C), R =< C
-    ->  write('You got '),
-        fish_type(3,Fish),
-        write(Fish),
-        nl,
-        miss(X),
-        Y is X+1,
-        set_miss(Y)
-    ;(  chance(2,C), R =< C
-    ->  write('You got '),
-        fish_type(2,Fish),
-        write(Fish),
-        nl,
-        miss(X),
-        Y is X+1,
-        set_miss(Y)
-    ;(  chance(1,C), R =< C
-    ->  write('You got '),
-        fish_type(1,Fish),
-        write(Fish),
-        nl,
-        miss(X),
-        Y is X+1,
-        set_miss(Y)
-    ;   write('You got nothing!'),nl,
-        miss(X),
-        Y is X+1,
-        set_miss(Y)))))), 
-        miss(A), 
-        write('Missed S Fish : '), write(A). %ini ga perlu ditampilin ga sih?
+        M >= 50
+    ->  R * 0.01
+    ;   R is R),
+    chance(X,C), 
+    R =< C * BonusChance,!,
+    write('You got '),
+    fish_type(X,Fish,Rarity),
+    write(Fish),
+    write('! (Rarity : '),
+    write(Rarity),
+    write(')'),nl,
+    (   X >= 4
+    ->  set_miss(0)
+    ;   miss(M),
+        M1 is M+1,
+        set_miss(M1)),
+    miss(A),
+    write('Missed Special Fish : '), write(A),nl,
+    
+    /* DOUBLE FISH! */
+    random(Double),
+    (   Double =< 0.01
+    ->  nl,write('===DOUBLE FISH==='), nl, write(' YOU ARE ON FIRE!!'),nl,fish
+    ;   Double is Double),
+    !.
 
-% dipanggil kalo level fishing naik
+fish :-
+    write('You got nothing!'), nl,
+    miss(M),
+    M1 is M+1,
+    set_miss(M1),
+    write('Missed Special Fish : '), write(M1).
+
 increase_chance_level :-
+/* I.S. Level Fishing terdefinisi
+   F.S. Naik Level Fisihing, Chance dapet ikan juga naik
+   Proses :
+   Chance baru = Chance + (1 - Chance)*(Persentase Kenaikan Chance)
+   Persentase kenaikan chance semakin kecil untuk ikan yang langka
+   KAMUS 
+   C1,C2,...,C6 = Chance ikan 1..6 sebelum naik level
+   Chance1,Chance2,...,Chance6 = Chance ikan 1..6 setelah naik level
+*/
     chance(1,C1),
     chance(2,C2),
     chance(3,C3),
     chance(4,C4),
+    chance(5,C5),
+    chance(6,C6),
     Chance1 is C1 + (1 - C1)*0.2,
     Chance2 is C2 + (1 - C2)*0.1,
     Chance3 is C3 + (1 - C3)*0.05,
     Chance4 is C4 + (1 - C4)*0.01,
+    Chance5 is C5 + (1 - C5)*0.001,
+    Chance6 is C6 + (1 - C6)*0.0001,
     retractall(chance(_,_)),
-    assertz(chance(1,Chance1)),
-    assertz(chance(2,Chance2)),
-    assertz(chance(3,Chance3)),
-    assertz(chance(4,Chance4)),
-    write('Chance C Fish increased from '), format('~2f',[C1]), write(' to '), format('~2f~n',[Chance1]),
-    write('Chance B Fish increased from '), format('~2f',[C2]), write(' to '), format('~2f~n',[Chance2]),
-    write('Chance A Fish increased from '), format('~2f',[C3]), write(' to '), format('~2f~n',[Chance3]),
-    write('Chance S Fish increased from '), format('~2f',[C4]), write(' to '), format('~2f~n',[Chance4]).
+    asserta(chance(1,Chance1)),
+    asserta(chance(2,Chance2)),
+    asserta(chance(3,Chance3)),
+    asserta(chance(4,Chance4)),
+    asserta(chance(5,Chance5)),
+    asserta(chance(6,Chance6)),
+    write('Chance '), fish_type(1,Fish1,_), write(Fish1), write(' increased from '), format('~2f',[C1]), write(' to '), format('~2f~n',[Chance1]),
+    write('Chance '), fish_type(2,Fish2,_), write(Fish2), write(' increased from '), format('~2f',[C2]), write(' to '), format('~2f~n',[Chance2]),
+    write('Chance '), fish_type(3,Fish3,_), write(Fish3), write(' increased from '), format('~2f',[C3]), write(' to '), format('~2f~n',[Chance3]),
+    write('Chance '), fish_type(4,Fish4,_), write(Fish4), write(' increased from '), format('~2f',[C4]), write(' to '), format('~2f~n',[Chance4]).
+
+bonus_chance_fishing_rod(Level) :-
+/* KAMUS
+  Level = Level Fishing Road 
+  Ch = Bonus Chance kalau pake Fishing Road level >1 */
+    Ch is float(Level-1)*0.005,
+    retract(bonus_chance(_)),
+    asserta(bonus_chance(Ch)).
+    
