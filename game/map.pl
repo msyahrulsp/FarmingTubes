@@ -18,15 +18,15 @@ map_generate_water :-
 map_generate :-
     asserta(map_object(1, 1, 'M')),
     asserta(map_object(8, 5, 'R')),
-    asserta(map_object(4, 3, 'H')),
-    asserta(map_object(7, 8, 'Q')),
+    asserta(map_object(4, 4, 'H')),
+    asserta(map_object(5, 7, 'Q')),
     map_generate_water.
 
 % Border kiri
 map_draw(X, Y) :-
     map_size(M), map_wall(W),
     X =:= 0, Y =< M + 1,
-    write(W),
+    write(W), write(' '),
     DX is X + 1,
     map_draw(DX, Y).
 
@@ -42,7 +42,7 @@ map_draw(X, Y) :-
 map_draw(X, Y) :-
     map_size(M), map_wall(W),
     X < M + 1, Y =:= 0,
-    write(W),
+    write(W), write(' '),
     DX is X + 1,
     map_draw(DX, Y).
 
@@ -50,7 +50,7 @@ map_draw(X, Y) :-
 map_draw(X, Y) :-
     map_size(M), map_wall(W),
     X < M + 1, Y =:= M + 1,
-    write(W),
+    write(W), write(' '),
     DX is X + 1,
     map_draw(DX, Y).
 
@@ -59,7 +59,7 @@ map_draw(X, Y) :-
     map_size(M), map_default(D),
     X < M + 1, Y < M + 1,
     (\+ map_object(X, Y, _)),
-    write(D),
+    write(D), write(' '),
     DX is X + 1,
     map_draw(DX, Y).
 
@@ -67,7 +67,7 @@ map_draw(X, Y) :-
     map_size(M),
     X < M + 1, Y < M + 1,
     map_object(X, Y, Obj),
-    write(Obj),
+    write(Obj), write(' '),
     DX is X + 1,
     map_draw(DX, Y).
 
