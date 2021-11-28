@@ -16,7 +16,7 @@ map_generate_water :-
     !.
 
 map_generate :-
-    asserta(map_object(1, 1, 'M')),
+    asserta(map_object(2, 1, 'M')),
     asserta(map_object(8, 5, 'R')),
     asserta(map_object(4, 4, 'H')),
     asserta(map_object(5, 7, 'Q')),
@@ -75,20 +75,18 @@ map_draw(X, Y) :-
 map_draw(_, _) :- !.
 
 map :- 
-    % game_playing(true),
-    map_generate,
+    game_start(true),
     map_draw(0, 0).
 
-% map :-
-%     write('Belum mulai').
+map :-
+    msg_not_start(MSG), write(MSG), nl.
 
 % Buat move
 valid_move(DX, DY) :-
     map_player(P), map_object(X, Y, P), map_size(M), map_water(W),
     DisX is DX + X, DisY is DY + Y,
-    DisX < M + 1, DisX > 0, DisY < M + 1, DisY > 0,
-    map_object(DisX, DisY, Obj),
-    Obj \= W.
+    DisX < M + 1, DisX > 0, DisY < M + 1, DisY > 0, 
+    \+map_object(DisX, DisY, W).
 
 % Buat Fishing
 isNear(Obj) :-

@@ -4,6 +4,18 @@
 /* 13520152 - Muhammad Fahmi Irfan */
 /* 13520161 - M Syahrul Surya Putra */
 
+:- include('./activity/fish.pl').
+:- include('./activity/house.pl').
+:- include('./activity/move.pl').
+:- include('./activity/ranching.pl').
+:- include('./game/inventory.pl').
+:- include('./game/items.pl').
+:- include('./game/map.pl').
+:- include('./game/player.pl').
+:- include('./game/quest.pl').
+:- include('./game/time.pl').
+:- include('./util/message.pl').
+
 :- dynamic(game_on/1).
 :- dynamic(game_start/1).
 
@@ -13,17 +25,6 @@ game_start(false).
 startGame :-
 	retract(game_on(false)), !,
 	asserta(game_on(true)),
-	['./activity/fish.pl'],
-	['./activity/house.pl'],
-	['./activity/move.pl'],
-	['./activity/ranching.pl'],
-	['./game/inventory.pl'],
-	['./game/items.pl'],
-	['./game/map.pl'],
-	['./game/player.pl'],
-	['./game/quest.pl'],
-	['./game/time.pl'],
-	['./util/message.pl'],
 	msg_title, nl,
 	msg_help, !.
 
@@ -34,19 +35,8 @@ start :-
 	game_on(true),
 	retract(game_start(false)),
 	asserta(game_start(true)),
-	write('Welcome to Prolog Valley. Choose your job'), nl,
-	write('1. Fisherman'), nl,
-	write('2. Farmer'), nl,
-	write('3. Rancher'), nl,
-	% Add: Harus kasih if biar ga error
-	read(X),
-	jobSelect(X, Y),
-	% End Add
-	retract(job('-')),
-	assertz(job(Y)),
-	write('You chose '), write(Y), write(', let\'s start farming!'),
-	retractall(menu(_)),
-	assertz(menu(1)),
+	player_init,
+	map_generate,
 	!.
 
 start :-

@@ -1,7 +1,6 @@
 :- dynamic(exp/2).
 :- dynamic(job/1).
 
-% Add: Harus di Rewrite ini, deprecated
 status :-
 	write('Your status:'), nl,
     write('============================================='), nl,
@@ -18,17 +17,29 @@ status :-
     write('============================================='), nl.
 
 /* Job Selection */
-jobSelect(0, base).
-jobSelect(1, fisherman).
-jobSelect(2, farmer).
-jobSelect(3, rancher).
+jobSelect(0, 'Base').
+jobSelect(1, 'Fisherman').
+jobSelect(2, 'Farmer').
+jobSelect(3, 'Rancher').
 
-job(base).
-exp(0, base).
-exp(0, fisherman).
-exp(0, farmer).
-exp(0, rancher).
+job('Base').
+exp(0, 'Base').
+exp(0, 'Fisherman').
+exp(0, 'Farmer').
+exp(0, 'Rancher').
 
+player_init :-
+	write('Welcome to Prolog Valley. Choose your job'), nl,
+	write('1. Fisherman'), nl,
+	write('2. Farmer'), nl,
+	write('3. Rancher'), nl,
+	% Add: Harus kasih if biar ga error
+	read(X),
+	jobSelect(X, Y),
+	% End Add
+	retractall(job(_)),
+	asserta(job(Y)),
+	write('You chose '), write(Y), write(', let\'s start farming!').
 
 /* Funtion add exp:
    Alur Umum:
@@ -57,7 +68,7 @@ addExp(Job_number) :-
 getLevel(Job_number, Level, Remainder) :-
     jobSelect(Job_number, Job),
     (
-        Job == base
+        Job == 'Base'
     ->
         findall(X, exp(X, _), List),
         sumlist(List, Exp)

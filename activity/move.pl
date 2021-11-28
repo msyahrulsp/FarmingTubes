@@ -9,7 +9,7 @@ w :-
     write(MSG),
     !.
 
-w :- game_start(true), msg_move('E', MSG), write(MSG).
+w :- game_start(true), \+valid_move(0, -1), msg_move('E', MSG), write(MSG).
 
 w :- game_start(false), msg_not_start(MSG), write(MSG).
 
@@ -22,7 +22,7 @@ a :-
     write(MSG),
     !.
 
-a :- game_start(true), msg_move('E', MSG), write(MSG).
+a :- game_start(true), \+valid_move(-1, 0), msg_move('E', MSG), write(MSG).
 
 a :- game_start(false), msg_not_start(MSG), write(MSG).
 
@@ -35,7 +35,7 @@ s :-
     write(MSG),
     !.
 
-s :- game_start(true), msg_move('E', MSG), write(MSG).
+s :- game_start(true), \+valid_move(0, 1), msg_move('E', MSG), write(MSG).
 
 s :- game_start(false), msg_not_start(MSG), write(MSG).
 
@@ -48,6 +48,6 @@ d :-
     write(MSG),
     !.
 
-d :- game_start(true), msg_move('E', MSG), write(MSG).
+d :- game_start(true), \+valid_move(1, 0), msg_move('E', MSG), write(MSG).
 
 d :- game_start(false), msg_not_start(MSG), write(MSG).
