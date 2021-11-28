@@ -28,13 +28,13 @@ nextDay :-
 addTime(NUM) :-
 	time(Time), Y is Time + NUM, Days is Y // 24, Rem is Y mod 24,
 	(Days > 0 -> addDay(Days); true),
-	retractall(time(_)), assertz(time(Rem)).
+	retractall(time(_)), assertz(time(Rem)), !.
 
 addDay(NUM) :-
 	day(X), Z is X + NUM,
 	retract(day(_)), assertz(day(Z)),
 	% changeWeather,
-	checkSeason.
+	checkSeason, !.
 
 /* Fungsi untuk mengganti weather */
 % changeWeather :-
@@ -52,5 +52,6 @@ checkSeason :-
 		X > 365 -> endGame;
 		X > 274, S \== 3 -> retractall(season(_)), assertz(season(3));
 		X > 183, S \== 2 -> retractall(season(_)), assertz(season(2));
-		X > 92, S \== 1 -> retractall(season(_)), assertz(season(1))
-	).
+		X > 92, S \== 1 -> retractall(season(_)), assertz(season(1));
+		true
+	), !.

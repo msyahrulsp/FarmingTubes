@@ -5,7 +5,7 @@ msg_move('D', 'You moved East.').
 msg_move('E', 'Can\'t move there! Please pick another direction.').
 
 msg_on('Game sudah menyala. Silahkan cek \'help\' untuk melihat list command.').
-msg_not_on('Game belum menyala. Silahkan cek \'startGame\' untuk melihat list command.').
+msg_not_on('Game belum menyala. Silahkan masukkan \'startGame\' untuk menyalakan game.').
 msg_start('Game sedang dimulai. Silahkan cek \'help\' untuk melihat list command.').
 msg_not_start('Game belum dimulai. Silahkan cek \'help\' untuk melihat list command.').
 
@@ -18,13 +18,16 @@ msg_title :-
     write('|  _  | (_| | |   \\ V /  __/\\__ \\ |_ '), nl,
     write('|_| |_|\\__,_|_|    \\_/ \\___||___/\\__|'), nl.
 
+startPrompt :-
+	nl, write('Isi cerita terbaikmu di sini'), nl.
+
 msg_help :-
     game_start(false),
 	write('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%'), nl,
 	write('%                              ~Harvest Star~                                  %'), nl,
 	write('% 1. startGame : untuk initialisasi modul game                                 %'), nl,
-	write('% 2. exitGame  : mematikan game (harus initialisasi ulang)                     %'), nl,
-	write('% 3. start     : untuk memulai petualanganmu                                   %'), nl,
+	write('% 2. exit      : mematikan game (harus initialisasi ulang)                     %'), nl,
+	write('% 3. start     : untuk memulai petualanganmu atau melanjutkannya               %'), nl,
 	write('% 3. quit      : untuk keluar dari permainan                                   %'), nl,
 	write('% 4. help      : menampilkan segala bantuan                                    %'), nl,
 	write('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%'), nl.
