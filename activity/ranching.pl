@@ -1,24 +1,5 @@
 :- dynamic(animal/2).
-:- dynamic(item/2).
-:- dynamic(day/1).
-:- dynamic(exp/2).
 :- dynamic(produce/3).
-:- dynamic(incExp/1).
-
-incExp(100).
-
-day(1).
-
-jobSelect(0, base).
-jobSelect(1, fisherman).
-jobSelect(2, farmer).
-jobSelect(3, rancher).
-
-job(base).
-exp(0, base).
-exp(0, fisherman).
-exp(0, farmer).
-exp(0, rancher).
 
 animal(2, 'chicken').
 animal(1, 'cow').
@@ -27,10 +8,6 @@ animal(1, 'sheep').
 produce('chicken', 'Egg', 1).
 produce('cow', 'Milk Bucket', 1).
 produce('sheep', 'Wool Sack', 1).
-
-item(0, 'Egg').
-item(0, 'Milk Bucket').
-item(0, 'Wool Sack').
 
 /* Ranch function
    Alur umum:
@@ -127,43 +104,6 @@ cooldown(Animal) :-
     getLevel(3, Level),
     Cd_new is Cd + 5 - Level,
     retractall(produce(Animal, _, _)), assertz(produce(Animal, Product, Cd_new)).
-
-/* Funtion add exp:
-   Alur Umum:
-   - Jika job sama dengan nomor job masukan -> Increment Exp * 2
-   - Jika job \== Masukan -> Increment Exp biasa */
-addExp(Job_number) :-
-    job(X), jobSelect(Job_number, Job),
-    (
-        X == Job
-    ->
-        exp(Exp, Job), incExp(Get),
-        % Add: Formula same job sementara
-        Inc is Get + Get
-    ;
-        exp(Exp, Job), incExp(Inc)
-    ), !,
-    Added is Exp + Inc,
-    retractall(exp(_, Job)),
-    assertz(exp(Added, Job)),
-    write('Your '), write(Job), write(' experience has increased by '), write(Inc), write('.'), nl.
-
-/* Function get level of job:
-   Alur umum:
-   - Jika job sama dengan nomor job masukan dan job masukan bukan nol -> tampilkan level job
-   - Jika nol -> Tampilkan level semua */
-getLevel(Job_number, Level) :-
-    jobSelect(Job_number, Job),
-    (
-        Job == base
-    ->
-        findall(X, exp(X, _), List),
-        sumlist(List, Exp)
-    ;
-        exp(Exp, Job)
-    ),
-    % Add: Level Formula, berikut yang sementara
-    Level is Exp // 300 + 1.
 
 /* Lowercase Conversion */
 toLower(X, Y) :-

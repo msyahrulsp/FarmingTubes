@@ -1,7 +1,6 @@
 :- dynamic(gold/1).
 :- dynamic(item/2).
 
-
 /* List Item, jumlah yang ada dalam inventory player */
 
 /* Gold dan prosedur untuk menunjukkan jumlah gold yang dimiliki */
@@ -179,21 +178,11 @@ sell :-
 	write('Here are the items in your inventory'), nl,
     % Diganti jadi negasi karena failure driven
 	\+(sellableInInven(Y)),
-	nl, write('[Enter 0 to Exit Shop]'), nl,
-	nl, write('What do you want to sell? (Example: \'Item Name\'.) '), read(I),
+	write('What do you want to sell? '), read(I), nl,
     % ini mending dikasih if aja sih, tapi terserah km implementnya gimana
     % If tuh ky: (Kondisi(X) -> Something; Kondisi(Y) -> Smth)
-	(
-		(I \== 0)
-	->
-		item(X, I),
-		X > 0,
-		sellable(I, V),
-		sellHowMuch(X, I, V)
-	;
-		% [Exit Shop]
-		!
-	).
+	item(X, I), X > 0, sellable(I, V),
+	sellHowMuch(X, I, V).
 sell :- sell.
 
 sellableInInven(Y) :-

@@ -4,6 +4,8 @@ msg_move('S', 'You moved South.').
 msg_move('D', 'You moved East.').
 msg_move('E', 'Please move in other direction.').
 
+msg_already_on('Game sudah menyala. Silahkan cek \'help\' untuk melihat list command.').
+msg_already_start('Game sedang dimulai. Silahkan cek \'help\' untuk melihat list command.').
 msg_not_start('Game belum dimulai. Silahkan cek \'help\' untuk melihat list command.').
 
 msg_title :-
