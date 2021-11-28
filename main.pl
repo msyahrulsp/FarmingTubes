@@ -35,7 +35,7 @@ start :-
 	game_on(true),
 	retract(game_start(false)),
 	asserta(game_start(true)),
-	player_init,
+	player_init, asserta(map_object(1, 1, 'P')),
 	map_generate,
 	!.
 
