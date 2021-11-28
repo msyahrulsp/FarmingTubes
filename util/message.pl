@@ -4,8 +4,9 @@ msg_move('S', 'You moved South.').
 msg_move('D', 'You moved East.').
 msg_move('E', 'Please move in other direction.').
 
-msg_already_on('Game sudah menyala. Silahkan cek \'help\' untuk melihat list command.').
-msg_already_start('Game sedang dimulai. Silahkan cek \'help\' untuk melihat list command.').
+msg_on('Game sudah menyala. Silahkan cek \'help\' untuk melihat list command.').
+msg_not_on('Game belum menyala. Silahkan cek \'startGame\' untuk melihat list command.').
+msg_start('Game sedang dimulai. Silahkan cek \'help\' untuk melihat list command.').
 msg_not_start('Game belum dimulai. Silahkan cek \'help\' untuk melihat list command.').
 
 msg_fish_not_near('Kamu sedang tidak dekat kolam. Silahkan pergi ke dekat kolam terlebih dahulu.').
@@ -21,19 +22,17 @@ msg_help :-
     game_start(false),
 	write('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%'), nl,
 	write('%                              ~Harvest Star~                                  %'), nl,
-	write('% 1. start  : untuk memulai petualanganmu                                      %'), nl,
-	write('% 2. map    : menampilkan peta                                                 %'), nl,
-	write('% 3. status : menampilkan kondisimu terkini                                    %'), nl,
-	write('% 4. w      : gerak ke utara 1 langkah                                         %'), nl,
-	write('% 5. s      : gerak ke selatan 1 langkah                                       %'), nl,
-	write('% 6. d      : gerak ke ke timur 1 langkah                                      %'), nl,
-	write('% 7. a      : gerak ke barat 1 langkah                                         %'), nl,
-	write('% 8. help   : menampilkan segala bantuan                                       %'), nl,
-	write('% (status seharusnya hanya ada 1)                                              %'), nl,
+	write('% 1. startGame : untuk initialisasi modul game                                 %'), nl,
+	write('% 2. exitGame  : mematikan game (harus initialisasi ulang)                     %'), nl,
+	write('% 3. start     : untuk memulai petualanganmu                                   %'), nl,
+	write('% 3. quit      : untuk keluar dari permainan                                   %'), nl,
+	write('% 4. help      : menampilkan segala bantuan                                    %'), nl,
 	write('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%'), nl.
 
 msg_help :-
     game_start(true),
+	write('++-----------------------------------------------------------------------------++'), nl,
+	write('++-----------------------------------------------------------------------------++'), nl,
 	write('|| 1. map         : menampilkan peta                                           ||'), nl,
 	write('||    - w           : gerak ke utara 1 langkah                                 ||'), nl,
 	write('||    - s           : gerak ke selatan 1 langkah                               ||'), nl,
@@ -59,4 +58,6 @@ msg_help :-
 	write('||    - throwItem   : membuang item tertentu                                   ||'), nl,
 	write('|| 10. quest      :  mengambil quest jika berada pada tile quest               ||'), nl,
 	write('|| 11. help       :  menampilkan segala bantuan                                ||'), nl,
-	write('|| 12. exitGame   :  keluar dari permainan                                     ||'), nl.
+	write('|| 12. quit       :  keluar dari permainan                                     ||'), nl,
+	write('++-----------------------------------------------------------------------------++'), nl,
+	write('++-----------------------------------------------------------------------------++'), nl.

@@ -7,40 +7,50 @@ status :-
 	job(A), write('Job: '), write(A), nl,
 	getLevel(0, B, I), write('Level: '), write(B), nl,
 	getLevel(1, C, D), write('Level Farming: '), write(C), nl,
-	write('Exp Farming: '), write(D), write(' / 300'), nl,
+	write('Exp Farming: '), write(D), write(' / 600'), nl,
 	getLevel(2, E, F), write('Level Fishing: '), write(E), nl,
-	write('Exp Fishing: '), write(F), write(' / 300'), nl,
+	write('Exp Fishing: '), write(F), write(' / 600'), nl,
 	getLevel(3, G, H), write('Level Ranching: '), write(G), nl,
-	write('Exp Ranching: '), write(H), write(' / 300'), nl,
-	write('Total Exp: '), write(I), write(' / 300'), nl,
+	write('Exp Ranching: '), write(H), write(' / 600'), nl,
+	write('Total Exp: '), write(I), write(' / 600'), nl,
 	gold(K), write('Gold: '), write(K),
     write('============================================='), nl.
 
 /* Job Selection */
-jobSelect(0, 'Base').
-jobSelect(1, 'Fisherman').
-jobSelect(2, 'Farmer').
-jobSelect(3, 'Rancher').
+jobSelect(0, base).
+jobSelect(1, fisherman).
+jobSelect(2, farmer).
+jobSelect(3, rancher).
 
-job('Base').
-exp(0, 'Base').
-exp(0, 'Fisherman').
-exp(0, 'Farmer').
-exp(0, 'Rancher').
+exp(0, base).
+exp(0, fisherman).
+exp(0, farmer).
+exp(0, rancher).
 
+
+/* Function initialize player:
+   Alur Umum:
+   - Tampilkan pilihan -> Memilih -> Pilihan 1-3 -> job
+   -                              -> Pilihan lain -> repeat */
 player_init :-
-	write('Welcome to Prolog Valley. Choose your job'), nl,
+	nl, write('Welcome to Harvest Star. Choose your job:'), nl,
 	write('1. Fisherman'), nl,
 	write('2. Farmer'), nl,
 	write('3. Rancher'), nl,
-	% Add: Harus kasih if biar ga error
-	read(X),
-	jobSelect(X, Y),
-	% End Add
-	retractall(job(_)),
-	asserta(job(Y)),
-	write('You chose '), write(Y), write(', let\'s start farming!').
+	pickJob.
 
+pickJob :-
+    repeat,
+    write('Choose your job. (Numbers 1 - 3)'), nl,
+    read(X),
+    (
+        jobSelect(X, Job), Job \== base
+    ->
+        assertz(job(Job)),
+        nl, write('You chose the '), write(Job), write(', let\'s start harvesting!'), nl, !
+    ;
+        nl, write('You chose the wrong job number (1 - 3)'), nl, fail
+    ).
 /* Funtion add exp:
    Alur Umum:
    - Jika job sama dengan nomor job masukan -> Increment Exp * 2
