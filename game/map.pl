@@ -101,7 +101,7 @@ valid_move(DX, DY) :-
     map_elmt(player, P), map_object(X, Y, P), map_size(M), map_elmt(water, W),
     DisX is DX + X, DisY is DY + Y,
     DisX < M + 1, DisX > 0, DisY < M + 1, DisY > 0, 
-    \+map_object(DisX, DisY, W).
+    \+ (map_object(DisX, DisY, W)).
 
 /* deprecated
 % Buat Fishing
@@ -133,4 +133,4 @@ nearWater :-
     (Py == Wy + 1; Py == Wy - 1).
 
 onTile(Tile_name) :-
-    map_object(X, Y, 'P'), map_object(X, Y, Tile), map_elmt(Tile_name, Tile).
+    map_elmt(player, P), map_object(X, Y, P), map_object(X, Y, Tile), map_elmt(Tile_name, Tile).

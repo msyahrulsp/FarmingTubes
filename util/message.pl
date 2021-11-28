@@ -2,7 +2,7 @@ msg_move('W', 'You moved North.').
 msg_move('A', 'You moved West.').
 msg_move('S', 'You moved South.').
 msg_move('D', 'You moved East.').
-msg_move('E', 'Please move in other direction.').
+msg_move('E', 'Can\'t move there! Please pick another direction.').
 
 msg_on('Game sudah menyala. Silahkan cek \'help\' untuk melihat list command.').
 msg_not_on('Game belum menyala. Silahkan cek \'startGame\' untuk melihat list command.').
@@ -31,8 +31,9 @@ msg_help :-
 
 msg_help :-
     game_start(true),
-	write('++-----------------------------------------------------------------------------++'), nl,
-	write('++-----------------------------------------------------------------------------++'), nl,
+	write('+-------------------------------------------------------------------------------+'), nl,
+	write('|+-----------------------------------------------------------------------------+|'), nl,
+	write('||                              ~Harvest Star~                                 ||'), nl,
 	write('|| 1. map         : menampilkan peta                                           ||'), nl,
 	write('||    - w           : gerak ke utara 1 langkah                                 ||'), nl,
 	write('||    - s           : gerak ke selatan 1 langkah                               ||'), nl,
@@ -59,5 +60,5 @@ msg_help :-
 	write('|| 10. quest      :  mengambil quest jika berada pada tile quest               ||'), nl,
 	write('|| 11. help       :  menampilkan segala bantuan                                ||'), nl,
 	write('|| 12. quit       :  keluar dari permainan                                     ||'), nl,
-	write('++-----------------------------------------------------------------------------++'), nl,
-	write('++-----------------------------------------------------------------------------++'), nl.
+	write('|+-----------------------------------------------------------------------------+|'), nl,
+	write('+-------------------------------------------------------------------------------+'), nl.
