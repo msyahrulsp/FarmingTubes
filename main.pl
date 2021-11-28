@@ -61,7 +61,7 @@ start :-
 		startPrompt,
 		retract(game_start(false)),
 		assertz(game_start(true)),
-		player_init, asserta(map_object(1, 1, 'P')),
+		player_init, asserta(map_object(4, 4, 'P')),
 		map_generate
 	;
 		retract(game_start(false)),
