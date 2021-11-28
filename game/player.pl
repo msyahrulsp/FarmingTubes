@@ -65,5 +65,5 @@ getLevel(Job_number, Level, Remainder) :-
         exp(Exp, Job)
     ),
     % Add: Level Formula, berikut yang sementara
-    Level is Exp // 300 + 1,
-    Remainder is Exp mod 300.
+    Level is Exp // 600 + 1,
+    Remainder is Exp mod 600.

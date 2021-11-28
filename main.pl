@@ -24,8 +24,8 @@ startGame :-
 	['./game/quest.pl'],
 	['./game/time.pl'],
 	['./util/message.pl'],
-	msg_title,
-	msg_help.
+	msg_title, nl,
+	msg_help, !.
 
 startGame :-
 	msg_already_on(MSG), write(MSG), nl.
