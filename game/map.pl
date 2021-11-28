@@ -12,10 +12,20 @@ map_digged('=').
 
 map_size(10).
 
+map_generate_water :-
+    !.
+
+map_generate :-
+    asserta(map_object(1, 1, 'M')),
+    asserta(map_object(8, 5, 'R')),
+    asserta(map_object(4, 3, 'H')),
+    asserta(map_object(7, 8, 'Q')),
+    map_generate_water.
+
 % Border kiri
 map_draw(X, Y) :-
     map_size(M), map_wall(W),
-    X =:= 0, Y =< S + 1,
+    X =:= 0, Y =< M + 1,
     write(W),
     DX is X + 1,
     map_draw(DX, Y).
@@ -23,28 +33,62 @@ map_draw(X, Y) :-
 % Border kanan
 map_draw(X, Y) :-
     map_size(M), map_wall(W),
-    X =:= S + 1, Y =< S + 1,
+    X =:= M + 1, Y =< M + 1,
+    write(W), nl,
+    DY is Y + 1,
+    map_draw(0, DY).
+
+% Border atas
+map_draw(X, Y) :-
+    map_size(M), map_wall(W),
+    X < M + 1, Y =:= 0,
     write(W),
     DX is X + 1,
     map_draw(DX, Y).
 
+% Border bawah
+map_draw(X, Y) :-
+    map_size(M), map_wall(W),
+    X < M + 1, Y =:= M + 1,
+    write(W),
+    DX is X + 1,
+    map_draw(DX, Y).
+
+% Object
+map_draw(X, Y) :-
+    map_size(M), map_default(D),
+    X < M + 1, Y < M + 1,
+    (\+ map_object(X, Y, _)),
+    write(D),
+    DX is X + 1,
+    map_draw(DX, Y).
+
+map_draw(X, Y) :-
+    map_size(M),
+    X < M + 1, Y < M + 1,
+    map_object(X, Y, Obj),
+    write(Obj),
+    DX is X + 1,
+    map_draw(DX, Y).
+
 % Done map_draw
-map_draw(_, _) :- true.
-
-print_map :-
-    map_default(X), write(X), nl, write(X).
-
-valid_move(DX, DY) :-
-    map_player(P), map_object(X, Y, P),
-    TempX is DX + X, TempY is DY + Y,
-    write(TempX), nl. 
+map_draw(_, _) :- !.
 
 map :- 
-    game_playing(true),
-    print_map.
+    % game_playing(true),
+    map_generate,
+    map_draw(0, 0).
 
-map :-
-    write('Belum mulai').
+% map :-
+%     write('Belum mulai').
+
+% Buat move
+valid_move(DX, DY) :-
+    map_player(P), map_object(X, Y, P), map_size(M), map_water(W),
+    DisX is DX + X, DisY is DY + Y,
+    DisX < M + 1, DisX > 0, DisY < M + 1, DisY > 0,
+    map_object(DisX, DisY, Obj),
+    Obj \= W.
 
 % Buat Fishing
 isNear(Obj) :-
@@ -65,24 +109,4 @@ isNear(Obj) :-
 isNear(Obj) :-
     map_player(P), map_object(X, Y, P),
     DY is Y + 1, map_object(X, DY, Obj1),
-    Obj =:= Obj1.
-
-isNear(Obj) :-
-    map_player(P), map_object(X, Y, P),
-    DX is X - 1, DY is Y - 1, map_object(DX, DY, Obj1),
-    Obj =:= Obj1.
-
-isNear(Obj) :-
-    map_player(P), map_object(X, Y, P),
-    DX is X - 1, DY is Y + 1, map_object(DX, DY, Obj1),
-    Obj =:= Obj1.
-
-isNear(Obj) :-
-    map_player(P), map_object(X, Y, P),
-    DX is X + 1, DY is Y - 1, map_object(DX, DY, Obj1),
-    Obj =:= Obj1.
-
-isNear(Obj) :-
-    map_player(P), map_object(X, Y, P),
-    DX is X + 1, DY is Y + 1, map_object(DX, DY, Obj1),
     Obj =:= Obj1.

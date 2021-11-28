@@ -1,3 +1,9 @@
+msg_move('W', 'You moved North.').
+msg_move('A', 'You moved West.').
+msg_move('S', 'You moved South.').
+msg_move('D', 'You moved East.').
+msg_move('E', 'Please move in other direction.').
+
 msg_not_start('Game belum dimulai. Silahkan cek \'help\' untuk melihat list command.').
 
 msg_title :-
