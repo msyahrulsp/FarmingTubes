@@ -3,6 +3,8 @@
 
 /* List Item, jumlah yang ada dalam inventory player */
 
+gold :- gold(X), write('Gold: '), write(X).
+
 gold(0).
 
 item(1, 'Level 1 Shovel').
@@ -11,10 +13,9 @@ item(0, 'Carrot Seed').
 item(0, 'Corn Seed').
 item(1, 'Tomato Seed').
 item(0, 'Potato Seed').
-% Ini udh diganti jadi animal, aneh ga sih kalo binatang jadi item, bebas sih
-% item(0, 'Chicken').
-% item(0, 'Sheep').
-% item(0, 'Cow').
+item(0, 'Chicken').
+item(0, 'Sheep').
+item(0, 'Cow').
 item(0, 'Level 2 Shovel').
 item(0, 'Level 2 Fishing Rod').
 
@@ -25,8 +26,6 @@ item(3, 'Corn').
 item(0, 'Tomato').
 item(1, 'Potato').
 item(0, 'Egg').
-item(0, 'Milk Bucket').
-item(0, 'Wool Sack').
 
 /* Nama Item, Harga */
 sellable('Carrot', 100).
@@ -34,36 +33,51 @@ sellable('Corn', 100).
 sellable('Tomato', 100).
 sellable('Potato', 100).
 sellable('Egg', 100).
-sellable('Milk Bucket', 100).
-sellable('Wool Sack', 100).
 
 /* Prosedur */
 
-/* Gmnhow biar 2 prosedur dibawah ini selalu return true? */
-
 inInven(Y) :-
-	item(X, Y),
-	X > 0,
+	item(X, Y), X > 0,
 	write(X), write(' '), write(Y), nl,
-	inInven(\+ Y).
+    % Dikasih fail untuk maksa backtracking
+	fail.
 
 sellableInInven(Y) :-
-	item(X, Y),
-	sellable(Y, _),
-	X > 0,
+	item(X, Y), sellable(Y, _), X > 0,
 	write('- '), write(X), write(' '), write(Y), nl,
-	sellableInInven(\+ Y).
+    % Dikasih fail buat enforced backtracking
+	fail.
 
 /* COMMAND inventory */
 inventory :-
 	write('Your Inventory:'), nl,
-	inInven(Y).
+    % Dikasih not biar yes akhirnya karena pasti kembaliin no
+	\+(inInven(Y)).
 
-/* COMMAND throwItem */
+/* COMMAND throwItem WIP */
 throwItem :-
-	inventory, nl,
-	write('What do you want to throw? '), read(I), nl.
-/* WIP blm dilanjut */
+	inventory,
+	write('- [Enter 0 to Exit Shop]'), nl,
+	nl, write('What do you want to throw? '), read(I),
+	(
+		(I \== 0)
+	->
+		item(X, I),
+		X > 0,
+		throwHowMuch(X, I)
+	;
+		% [Cancel Throwing]
+		!
+	).
+throwItem :- throwItem.
+
+throwHowMuch(X, I) :- 
+	write('You have '), write(X), write(' '), write(I) ,write(' How many do you want to throw? '), read(N),
+	N >= 0,
+	X >= N, !, nl,
+	write('You threw away '), write(N), write(' '), write(I), write('.'), nl,
+	removeItem(N, I).
+throwHowMuch(X, I) :- throwHowMuch(X, I).
 
 /* Dipanggil saat masuk Market */
 marketMenu :-
@@ -96,11 +110,13 @@ buySomething(X) :- X is 6, cost(1000, 'Sheep').
 buySomething(X) :- X is 7, cost(1500, 'Cow').
 buySomething(X) :- X is 8, cost(300, 'Level 2 Shovel').
 buySomething(X) :- X is 9, cost(500, 'Level 2 Fishing Rod').
+
+% [Exit Shop]
 buySomething(X) :- X is 0.
 
 cost(X, Z) :-
 	write('How many do you want to buy? '),
-	read(I), I > 0, nl, !, 
+	read(I), I >= 0, nl, !, 
 	checkIfEnough(X, Z, I).
 cost(X, Z) :- cost(X, Z).
 	
@@ -146,23 +162,34 @@ removeItem(A, B) :-
 /* COMMAND sell */	
 /* kondisi yang perlu ditambahkan: player harus sedang berada di dalam market */
 sell :-
-	write('Here are the items in your inventory'), nl, !,
-	sellableInInven(Y), !,
-	write('What do you want to sell? '), read(I), nl,
-	item(X, I),
-	X > 0,
-	sellable(I, V),
-	!, sellHowMuch(X, I, V).
+    % cutnya pada gw ilangin kurang penting
+	write('Here are the items in your inventory'), nl,
+    % Diganti jadi negasi karena failure driven
+	\+(sellableInInven(Y)),
+	write('- [Enter 0 to Exit Shop]'), nl,
+	nl, write('What do you want to sell? '), read(I),
+    % ini mending dikasih if aja sih, tapi terserah km implementnya gimana
+    % If tuh ky: (Kondisi(X) -> Something; Kondisi(Y) -> Smth)
+	(
+		(I \== 0)
+	->
+		item(X, I),
+		X > 0,
+		sellable(I, V),
+		sellHowMuch(X, I, V)
+	;
+		% [Exit Shop]
+		!
+	).
 sell :- sell.
 
 sellHowMuch(X, I, V) :- 
-	write('How many do you want to sell? '), read(N), nl,
+	write('How many do you want to sell? '), read(N),
 	N >= 0,
 	X >= N, !,
+	C is N * V, nl,
 	write('You have sold '), write(N), write(' '), write(I), write('.'), nl,
 	write('You received '), write(C), write(' golds.'), nl, nl,
 	removeItem(N, I),
-	C is N * V,
-	giveGold(C),
-	sell.
-sellHowMuch(X, I) :- sellHowMuch(X, I).
+	giveGold(C).
+sellHowMuch(X, I, V) :- sellHowMuch(X, I, V).
