@@ -15,7 +15,7 @@ produce('sheep', 'Wool Sack', 1).
    - berada di ranch -> tampilin binatang -> harvest/exit */
 ranch :-
     % Add: Add a verification if player is at ranch position
-    write('Welcome to the ranch, you have:'), nl,
+    nl, write('Welcome to the ranch, you have:'), nl,
     \+(listAnimals), nl,
     write('Which animal will you harvest? (To exit enter "0" or "exit")'), nl,
     read(Pin), nl,
@@ -100,10 +100,53 @@ animalHarvest(In) :-
    - Jika job sama dengan nomor job masukan -> Increment Exp * 2
    - Jika job \== Masukan -> Increment Exp biasa */
 cooldown(Animal) :-
-    produce(Animal, Product, Cd),
+    produce(Animal, Product, Cd), day(Day),
     getLevel(3, Level),
-    Cd_new is Cd + 5 - Level,
-    retractall(produce(Animal, _, _)), assertz(produce(Animal, Product, Cd_new)).
+    Cd_new is Day + 10 - Level,
+    (
+        Cd_new > Day, C is Cd_new
+    ;
+        % Minimum cooldown sehari
+        C is Day + 1
+    )
+    retractall(produce(Animal, _, _)), assertz(produce(Animal, Product, C)).
+
+/* Funtion add exp:
+   Alur Umum:
+   - Jika job sama dengan nomor job masukan -> Increment Exp * 2
+   - Jika job \== Masukan -> Increment Exp biasa */
+addExp(Job_number) :-
+    job(X), jobSelect(Job_number, Job),
+    (
+        X == Job
+    ->
+        % Add: Formula same job sementara
+        Inc is 200
+    ;
+        Inc is 100
+    ), !,
+    exp(Exp, Job),
+    Added is Exp + Inc,
+    retractall(exp(_, Job)),
+    assertz(exp(Added, Job)),
+    write('Your '), write(Job), write(' experience has increased by '), write(Inc), write('.'), nl.
+
+/* Function get level of job:
+   Alur umum:
+   - Jika job sama dengan nomor job masukan dan job masukan bukan nol -> tampilkan level job
+   - Jika nol -> Tampilkan level semua */
+getLevel(Job_number, Level) :-
+    jobSelect(Job_number, Job),
+    (
+        Job == base
+    ->
+        findall(X, exp(X, _), List),
+        sumlist(List, Exp)
+    ;
+        exp(Exp, Job)
+    ),
+    % Add: Level Formula, berikut yang sementara
+    Level is Exp // 300 + 1.
 
 /* Lowercase Conversion */
 toLower(X, Y) :-
