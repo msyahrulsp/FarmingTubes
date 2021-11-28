@@ -30,6 +30,7 @@ map_generate :-
     asserta(map_object(2, 1, 'M')),
     asserta(map_object(8, 5, 'R')),
     asserta(map_object(4, 4, 'H')),
+    asserta(map_object(4, 4, 'P')),
     asserta(map_object(5, 7, 'Q')),
     map_size(M),
     map_generate_water(8, 3, 1, M).
@@ -91,10 +92,10 @@ map :-
         game_start(true)
     ->
         nl, write('map:'), nl, nl,
-        map_draw(0, 0)
+        map_draw(0, 0), !
     ;
-        msg_not_start(MSG), write(MSG), nl
-    ), !.
+        nl, msg_not_start(MSG), write(MSG), nl, !, fail
+    ).
 
 % Buat move
 valid_move(DX, DY) :-
@@ -102,29 +103,6 @@ valid_move(DX, DY) :-
     DisX is DX + X, DisY is DY + Y,
     DisX < M + 1, DisX > 0, DisY < M + 1, DisY > 0, 
     \+ (map_object(DisX, DisY, W)).
-
-/* deprecated
-% Buat Fishing
-isNear(Obj) :-
-    map_elmt(player, P), map_object(X, Y, P),
-    DX is X - 1, map_object(DX, Y, Obj1),
-    Obj == Obj1.
-
-isNear(Obj) :-
-    map_elmt(player, P), map_object(X, Y, P),
-    DX is X + 1, map_object(DX, Y, Obj1),
-    Obj == Obj1.
-
-isNear(Obj) :-
-    map_elmt(player, P), map_object(X, Y, P),
-    DY is Y - 1, map_object(X, DY, Obj1),
-    Obj == Obj1.
-
-isNear(Obj) :-
-    map_elmt(player, P), map_object(X, Y, P),
-    DY is Y + 1, map_object(X, DY, Obj1),
-    Obj == Obj1.
-*/
 
 % Locators
 nearWater :-
