@@ -14,8 +14,8 @@ status :-
 	getLevel(3, G, H), write('Level Ranching: '), write(G), nl,
 	write('Exp Ranching: '), write(H), write(' / 300'), nl,
 	write('Total Exp: '), write(I), write(' / 300'), nl,
-	gold(K), write('Gold: '), write(K).
-    write('============================================='), nl,
+	gold(K), write('Gold: '), write(K),
+    write('============================================='), nl.
 
 /* Job Selection */
 jobSelect(0, base).

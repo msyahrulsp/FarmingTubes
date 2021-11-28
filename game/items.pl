@@ -76,9 +76,9 @@ removeItem(A, B) :-
 inventory :-
 	write('Your Inventory:'), nl,
     % Dikasih not biar yes akhirnya karena pasti kembaliin no
-	\+(inInven(Y)).
+	\+(inInven).
 
-inInven(Y) :-
+inInven :-
 	item(X, Y), X > 0,
 	write(X), write(' '), write(Y), nl,
     % Dikasih fail untuk maksa backtracking
@@ -163,7 +163,7 @@ checkIfEnough(X, Z, I) :-
 	takeGold(C), !,
 	buy.
 
-checkIfEnough(X, Z, I) :-
+checkIfEnough(X, _, I) :-
 	gold(G),
 	C is I * X,
 	G < C,
@@ -177,7 +177,7 @@ sell :-
     % cutnya pada gw ilangin kurang penting
 	write('Here are the items in your inventory'), nl,
     % Diganti jadi negasi karena failure driven
-	\+(sellableInInven(Y)),
+	\+(sellableInInven),
 	write('What do you want to sell? '), read(I), nl,
     % ini mending dikasih if aja sih, tapi terserah km implementnya gimana
     % If tuh ky: (Kondisi(X) -> Something; Kondisi(Y) -> Smth)
@@ -185,7 +185,7 @@ sell :-
 	sellHowMuch(X, I, V).
 sell :- sell.
 
-sellableInInven(Y) :-
+sellableInInven :-
 	item(X, Y), sellable(Y, _), X > 0,
 	write('- '), write(X), write(' '), write(Y), nl,
     % Dikasih fail buat enforced backtracking

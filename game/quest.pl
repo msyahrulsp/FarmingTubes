@@ -48,8 +48,8 @@ questComplete :-
         retractall(item(_, Farm)), retractall(item(_, Fish)), retractall(item(_, Produce)),
         assertz(item(A, Farm)), assertz(item(B, Fish)), assertz(item(C, Produce)),
         % Add Exp to base
-        jobSelect(0, Job), exp(Exp, Job), Inc is 100 * Qd, Exp_new is Inc + X,
-        retractall(exp(_, Y)), assertz(exp(Exp_new, Y)),
+        jobSelect(0, Job), exp(Exp, Job), Inc is 100 * Qd, Exp_new is Inc + Exp,
+        retractall(exp(_, Job)), assertz(exp(Exp_new, Job)),
         % Add money
         gold(Gold), Get is 1000 * Qd, New_Gold is Get + Gold,
         retractall(gold(_)), assertz(gold(New_Gold)),

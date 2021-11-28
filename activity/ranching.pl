@@ -100,7 +100,7 @@ animalHarvest(In) :-
    - Jika job sama dengan nomor job masukan -> Increment Exp * 2
    - Jika job \== Masukan -> Increment Exp biasa */
 cooldown(Animal) :-
-    produce(Animal, Product, Cd), day(Day),
+    produce(Animal, Product, _), day(Day),
     getLevel(3, Level, _),
     Cd_new is Day + 10 - Level,
     (
@@ -108,7 +108,7 @@ cooldown(Animal) :-
     ;
         % Minimum cooldown sehari
         C is Day + 1
-    )
+    ),
     retractall(produce(Animal, _, _)), assertz(produce(Animal, Product, C)).
 
 /* Lowercase Conversion */
