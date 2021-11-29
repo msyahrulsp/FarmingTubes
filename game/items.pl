@@ -55,7 +55,7 @@ plantable('Tomato Seed', 't', 4).
 plantable('Potato Seed', 'a', 3).
 
 harvestable('C', 'Carrot').
-harvestable('N', 'Corn')
+harvestable('N', 'Corn').
 harvestable('T', 'Tomato').
 harvestable('A', 'Potato').
 
@@ -66,7 +66,18 @@ harvestable('A', 'Potato').
 giveGold(X) :-
 	retract(gold(Y)),
 	Z is Y + X,
-	assertz(gold(Z)).
+	assertz(gold(Z)),
+	(
+		Z >= 20000
+	->
+		retractall(game_start(_)),
+		retractall(game_on(_)),
+		asserta(game_start(false)),
+		asserta(game_on(false)),
+		msg_win
+	;
+		true
+	).
 	
 takeGold(X) :-
 	retract(gold(Y)),

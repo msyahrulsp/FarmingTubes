@@ -77,6 +77,7 @@ fish :-
     miss(A),
     write('Missed Special Fish : '), write(A),nl,
     addItem(1,Fish),
+    nl,addJobExp(1),
 
     /* DOUBLE FISH! */
     random(Double),
