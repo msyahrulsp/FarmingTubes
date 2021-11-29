@@ -7,9 +7,9 @@
 fish_type(1,'Snelt','C').
 fish_type(2,'Rainbob','B').
 fish_type(3,'Arna','A').
-fish_type(4,'Sharkshark','S').
-fish_type(5,'Big Sharkshark','SS').
-fish_type(6,'Super Big Sharkshark','SSR').
+fish_type(4,'Sharshark','S').
+fish_type(5,'Big Sharshark','SS').
+fish_type(6,'Super Big Sharshark','SSR').
 
 chance(6,0).
 chance(5,0).

@@ -30,9 +30,9 @@ item(0, 'Milk Bucket').
 item(0, 'Snelt').
 item(0, 'Rainbob').
 item(0, 'Arna').
-item(0, 'Sharkshark').
-item(0, 'Big Sharkshark').
-item(0, 'Super Big Sharkshark').
+item(0, 'Sharshark').
+item(0, 'Big Sharshark').
+item(0, 'Super Big Sharshark').
 
 /* Nama Item, Sell Price */
 sellable('Carrot', 100).
@@ -45,9 +45,9 @@ sellable('Milk Bucket', 375).
 sellable('Snelt', 50).
 sellable('Rainbob', 100).
 sellable('Arna', 175).
-sellable('Sharkshark', 250).
-sellable('Big Sharkshark', 350).
-sellable('Super Big Sharkshark', 500).
+sellable('Sharshark', 250).
+sellable('Big Sharshark', 350).
+sellable('Super Big Sharshark', 500).
 
 plantable('Carrot Seed', 'c', 2, 'C').
 plantable('Corn Seed', 'n', 10, 'N').

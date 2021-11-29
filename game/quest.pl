@@ -8,13 +8,13 @@ q_done(0).
 quests('Carrot', 1, 'Rainbob', 1, 'Egg', 1).
 quests('Carrot', 2, 'Snelt', 4, 'Egg', 2).
 quests('Corn', 2, 'Arna', 2, 'Wool Sack', 1).
-quests('Tomato', 4, 'Sharkshark', 2, 'Wool Sack', 2).
+quests('Tomato', 4, 'Sharshark', 2, 'Wool Sack', 2).
 quests('Potato', 7, 'Rainbob', 5, 'Milk Bucket', 2).
 quests('Carrot', 6, 'Arna', 3, 'Milk Bucket', 2).
-quests('Tomato', 7, 'Sharkshark', 3, 'Egg', 8).
-quests('Potato', 12, 'Big Sharkshark', 3, 'Egg', 9).
-quests('Tomato', 8, 'Big Sharkshark', 3, 'Wool Sack', 4).
-quests('Corn', 8, 'Super Big Sharkshark', 2, 'Milk Bucket', 3).
+quests('Tomato', 7, 'Sharshark', 3, 'Egg', 8).
+quests('Potato', 12, 'Big Sharshark', 3, 'Egg', 9).
+quests('Tomato', 8, 'Big Sharshark', 3, 'Wool Sack', 4).
+quests('Corn', 8, 'Super Big Sharshark', 2, 'Milk Bucket', 3).
 
 
 /* Function to get quest:
@@ -60,14 +60,13 @@ questComplete :-
         jobSelect(0, Job), exp(Exp, Job), Inc is 100 * Qd, Exp_new is Inc + Exp,
         retractall(exp(_, Job)), assertz(exp(Exp_new, Job)),
         % Add money
-        gold(Gold), Get is 350 * Qd, New_Gold is Get + Gold,
-        retractall(gold(_)), assertz(gold(New_Gold)),
+        Get is 350 * Qd,
         % Success message
         write('You have given the required items to questgiver.'), nl, nl,
         write('Your base experience has risen by '), write(Inc), write('.'), nl,
         write('You recieved '), write(Get), write(' gold.'), nl,
         % Write diary
-        writeDiaryEvent(0)
+        giveGold(Get), writeDiaryEvent(0)
     ;
         % Fail message
         write('You tried to submit your items, but...'), nl, nl,
