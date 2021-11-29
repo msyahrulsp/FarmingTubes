@@ -77,7 +77,8 @@ fish :-
     miss(A),
     write('Missed Special Fish : '), write(A),nl,
     addItem(1,Fish),
-    nl,addJobExp(1),
+    XP is 25 + X*25 + ((X-1)//3)*25,
+    nl,add_fishing_exp(XP),
 
     /* DOUBLE FISH! */
     random(Double),
@@ -196,3 +197,16 @@ fishing_level_up :-
     ;
         true
     ).
+
+add_fishing_exp(N) :-
+    exp(X, fisherman),
+    (
+        job(fisherman)
+    ->
+        NewN is N * 2
+    ;
+        NewN is N
+    ),
+    NewExp is X + NewN,
+    retract(exp(X, fisherman)), asserta(exp(NewExp, fisherman)), 
+    write('Your fishing experience has increased by '), write(NewN), write('.'), nl, fishing_level_up,!.
