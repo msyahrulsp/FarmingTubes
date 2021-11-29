@@ -4,7 +4,7 @@ dig :-
     canDig, map_object(X, Y, 'P'),
     assertz(map_object(X, Y, '=')), 
     msg_dig(MSG), write(MSG), nl,
-    add_farming_exp(45),
+    add_farming_exp(45), writeDiaryEvent(1),
     digTime,
     !.
 
@@ -21,7 +21,7 @@ plant :-
     assertz(map_object(PosX, PosY, S)),
     asserta(crop(PosX, PosY, S, T)),
     msg_plant(MSG), write(MSG), write(I), nl,
-    add_farming_exp(65),
+    add_farming_exp(65), writeDiaryEvent(2),
     addTime(2),
     !.
 
@@ -66,7 +66,7 @@ harvest :-
     NewN is N + Yield,
     asserta(item(NewN, Name)),
     msg_harvest(MSG), write(MSG), write(Yield), write(' '), write(Name), nl,
-    add_farming_exp(80),
+    add_farming_exp(80), writeDiaryEvent(3),
     addTime(4),
     !.
 

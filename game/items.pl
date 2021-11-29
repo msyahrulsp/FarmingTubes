@@ -218,7 +218,7 @@ checkIfEnough(X, Z, I) :-
 	G >= C,
 	write('You have bought '), write(I), write(' '), write(Z), write('.'), nl,
 	write('You are charged '), write(C), write(' golds.'), nl, nl,
-	addMarketTime,
+	writeDiaryEvent(4), addMarketTime,
 	(
 		(Z == 'chicken'; Z == 'sheep'; Z == 'cow')
 	->
@@ -283,7 +283,7 @@ sellHowMuch(X, I, V) :-
 	C is N * V, nl,
 	write('You have sold '), write(N), write(' '), write(I), write('.'), nl,
 	write('You received '), write(C), write(' golds.'), nl, nl,
-	addMarketTime,
+	writeDiaryEvent(5), addMarketTime,
 	removeItem(N, I),
 	giveGold(C).
 sellHowMuch(X, I, V) :- sellHowMuch(X, I, V).
