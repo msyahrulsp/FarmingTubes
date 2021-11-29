@@ -9,6 +9,9 @@ map_elmt(house, 'H').
 map_elmt(quest, 'Q').
 map_elmt(water, 'o').
 map_elmt(digged, '=').
+map_elmt(corn, 'c').
+map_elmt(tomato, 't').
+map_elmt(potato, 'p').
 
 map_size(10).
 
@@ -114,22 +117,22 @@ nearWater :-
     (Py =:= Wy + 1; Py =:= Wy - 1).*/
 
 onTile(Tile_name) :-
-    map_elmt(player, P), map_object(X, Y, P), map_object(X, Y, Tile), map_elmt(Tile_name, Tile).
+    map_elmt(player, P), map_object(X, Y, P), map_object(X, Y, Tile), map_elmt(Tile_name, Tile), P \== Tile.
 
 % Farming
 canDig :-
-    map_object(X, Y, 'P'), retract(map_object(X, Y, 'P')),
-    ( \+ map_object(X, Y, _)
-    ->
-        asserta(map_object(X, Y, 'P')),
-        msg_dig(MSG), write(MSG), nl, !
-    ;
-        asserta(map_object(X, Y, 'P')),
-        msg_dig_already(MSG), write(MSG), nl, !
-    ).
+    \+ (onTile(_)).
+    % map_object(X, Y, 'P'), retract(map_object(X, Y, 'P')),
+    % ( \+ map_object(X, Y, _)
+    % ->
+    %     asserta(map_object(X, Y, 'P')),
+    %     msg_dig(MSG), write(MSG), nl, !
+    % ;
+    %     asserta(map_object(X, Y, 'P')),
+    %     msg_dig_already(MSG), write(MSG), nl, !
+    % ).
 
 canPlant :-
     map_object(X, Y, 'P'),
     map_object(X, Y, Obj),
-    map_elmt(digged, Obj1),
-    Obj == Obj1.
+    map_elmt(digged, Obj).
