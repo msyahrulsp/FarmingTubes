@@ -285,7 +285,7 @@ sellHowMuch(X, I, V) :-
 	write('You received '), write(C), write(' golds.'), nl, nl,
 	writeDiaryEvent(5), addMarketTime,
 	removeItem(N, I),
-	giveGold(C).
+	giveGold(C), !.
 sellHowMuch(X, I, V) :- sellHowMuch(X, I, V).
 
 addMarketTime :-
