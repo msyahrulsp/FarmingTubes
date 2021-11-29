@@ -27,7 +27,19 @@ msg_title :-
     write('|_| |_|\\__,_|_|    \\_/ \\___||___/\\__|'), nl.
 
 startPrompt :-
-	nl, write('Isi cerita terbaikmu di sini'), nl.
+	nl, write('Proyek Game Simulasi Anda sudah hampir sukses, namun tiba-tiba klien Anda menghilang tanpa meninggalkan uang proyek '),nl,
+	write('tersebut. Ya, Anda sudah ditipu. Pembuatan Game Simulasi bukanlah hal yang sederhana, sehingga Anda memerlukan bantuan '),nl,
+	write('finansial dari pihak luar sebesar 20000 gold. Sekarang, Anda tidak mungkin melunasi hutang tersebut. Mereka memahami '),nl,
+	write('keadaan Anda, sehingga mereka memberi tenggat waktu setahun bagi Anda untuk melunasinya.'),nl,nl,
+	write('Ketika Anda sudah begitu frustrasi, Anda mencoba game yang Anda buat. Game simulasi itu mengingatkan Anda dengan '),nl,
+	write('kampung halaman Anda. Terbesit pikiran Anda untuk kembali ke kampung halaman, namun menjadi korban penipuan di kota '),nl,
+	write('metropolitan akan menjadi buah bibir yang hangat bagi warga setempat.'),nl,nl,
+	write('Di tengah kegundahan yang Anda alami, Anda sadar bahwa Anda tetap harus melangkah. Diam di tempat dan hanya berpikir '),nl,
+	write('tidak akan menyelesaikan masalah. Anda memutuskan untuk mencari kesempatan di kampung halaman yang sudah lama tidak '),nl,
+	write('Anda kunjungi lagi.'),nl,nl,
+
+	write('Suara yang sangat familiar terdengar dari kejauhan, menyambut kehadiran Anda di kampung halaman.'),nl,
+	write('\"Selamat datang kembali, Claire.\"'), nl.
 
 msg_help :-
     game_start(false),
