@@ -98,5 +98,5 @@ add_farming_exp(N) :-
     ),
     NewExp is X + NewN,
     retract(exp(X, farmer)), asserta(exp(NewExp, farmer)), 
-    write('Your Farming Experience has increased by '), write(NewExp), write('.'), nl,
+    write('Your Farming Experience has increased by '), write(NewN), write('.'), nl,
     !.
