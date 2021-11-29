@@ -5,7 +5,7 @@ dig :-
     assertz(map_object(X, Y, '=')), 
     msg_dig(MSG), write(MSG), nl,
     add_farming_exp(45),
-    digTime.
+    digTime,
     !.
 
 plant :-
