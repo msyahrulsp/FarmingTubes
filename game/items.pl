@@ -5,8 +5,7 @@
 
 /* List Item, jumlah yang ada dalam inventory player */
 
-/* Gold dan prosedur untuk menunjukkan jumlah gold yang dimiliki */
-gold :- gold(X), write('Gold: '), write(X).
+/* Gold yang dimiliki player */
 gold(0).
 
 /* Jumlah item pada inventory, nama item */
@@ -139,36 +138,49 @@ throwHowMuch(X, I) :-
 throwHowMuch(X, I) :- throwHowMuch(X, I).
 
 
-/* Dipanggil saat masuk Market */
-marketMenu :-
-	write('What do you want to do?'), nl,
-	write('1. Buy'), nl,
-	write('2. Sell').
+/* COMMAND market */
+market :-
+	(game_start(false) -> nl, msg_not_start(MSG), write(MSG), nl, !, fail; true),
+	(
+		onTile(marketplace)
+	->
+		write('What do you want to do?'), nl,
+		write('1. Buy'), nl,
+		write('2. Sell')
+	;
+        nl, write('You are not at the marketplace.'), nl, !, fail
+	).
 
 
 /* COMMAND buy */
-/* kondisi yang perlu ditambahkan: player harus sedang berada di dalam market */
 buy :-
-	write('1. Carrot Seed (50 golds)'), nl,
-	write('2. Corn Seed (50 golds)'), nl,
-	write('3. Tomato Seed (50 golds)'), nl,
-	write('4. Potato Seed (50 golds)'), nl,
-	write('5. Chicken (500 golds)'), nl,
-	write('6. Sheep (1000 golds)'), nl,
-	write('7. Cow (1500 golds)'), nl,
-	write('8. Level 2 Shovel (300 golds)'), nl,
-	write('9. Level 2 Fishing Rod (500 golds)'), nl,
-	write('0. [Exit Shop]'), nl, nl,
-	write('What do you want to buy? (Enter a Number) '), read(X), buySomething(X), !.
+	(game_start(false) -> nl, msg_not_start(MSG), write(MSG), nl, !, fail; true),
+	(
+		onTile(marketplace)
+	->
+		write('1. Carrot Seed (50 golds)'), nl,
+		write('2. Corn Seed (50 golds)'), nl,
+		write('3. Tomato Seed (50 golds)'), nl,
+		write('4. Potato Seed (50 golds)'), nl,
+		write('5. Chicken (300 golds)'), nl,
+		write('6. Sheep (650 golds)'), nl,
+		write('7. Cow (900 golds)'), nl,
+		write('8. Level 2 Shovel (300 golds)'), nl,
+		write('9. Level 2 Fishing Rod (500 golds)'), nl,
+		write('0. [Exit Shop]'), nl, nl,
+		write('What do you want to buy? (Enter a Number) '), read(X), buySomething(X), !
+	;
+		nl, write('You are not at the marketplace.'), nl, !, fail
+	).
 buy :- buy.
 
 buySomething(X) :- X is 1, cost(50, 'Carrot Seed').
 buySomething(X) :- X is 2, cost(50, 'Corn Seed').
 buySomething(X) :- X is 3, cost(50, 'Tomato Seed').
 buySomething(X) :- X is 4, cost(50, 'Potato Seed').
-buySomething(X) :- X is 5, cost(500, 'chicken').
-buySomething(X) :- X is 6, cost(1000, 'sheep').
-buySomething(X) :- X is 7, cost(1500, 'cow').
+buySomething(X) :- X is 5, cost(300, 'chicken').
+buySomething(X) :- X is 6, cost(650, 'sheep').
+buySomething(X) :- X is 7, cost(900, 'cow').
 buySomething(X) :- X is 8, cost(300, 'Level 2 Shovel').
 buySomething(X) :- X is 9, cost(500, 'Level 2 Fishing Rod').
 
@@ -187,6 +199,7 @@ checkIfEnough(X, Z, I) :-
 	G >= C,
 	write('You have bought '), write(I), write(' '), write(Z), write('.'), nl,
 	write('You are charged '), write(C), write(' golds.'), nl, nl,
+	addMarketTime,
 	(
 		(Z == 'chicken'; Z == 'sheep'; Z == 'cow')
 	->
@@ -208,15 +221,26 @@ checkIfEnough(X, _, I) :-
 /* COMMAND sell */	
 /* kondisi yang perlu ditambahkan: player harus sedang berada di dalam market */
 sell :-
-    % cutnya pada gw ilangin kurang penting
-	write('Here are the items in your inventory'), nl,
-    % Diganti jadi negasi karena failure driven
-	\+(sellableInInven),
-	write('What do you want to sell? '), read(I), nl,
-    % ini mending dikasih if aja sih, tapi terserah km implementnya gimana
-    % If tuh ky: (Kondisi(X) -> Something; Kondisi(Y) -> Smth)
-	item(X, I), X > 0, sellable(I, V),
-	sellHowMuch(X, I, V).
+	(game_start(false) -> nl, msg_not_start(MSG), write(MSG), nl, !, fail; true),
+	(
+		onTile(marketplace)
+	->
+		write('Here are the items in your inventory'), nl,
+		\+(sellableInInven),
+		nl, write('[Enter 0 to Cancel]'), nl,
+		write('What do you want to sell? (Example: \'Item Name\'.) '), read(I),
+		(
+			(I \== 0)
+		->
+			item(X, I), X > 0, sellable(I, V),
+			sellHowMuch(X, I, V)
+		;
+			% [Cancel Selling]
+			!
+		)
+	;
+        nl, write('You are not at the marketplace.'), nl, !, fail
+	).
 sell :- sell.
 
 sellableInInven :-
@@ -232,6 +256,17 @@ sellHowMuch(X, I, V) :-
 	C is N * V, nl,
 	write('You have sold '), write(N), write(' '), write(I), write('.'), nl,
 	write('You received '), write(C), write(' golds.'), nl, nl,
+	addMarketTime,
 	removeItem(N, I),
 	giveGold(C).
 sellHowMuch(X, I, V) :- sellHowMuch(X, I, V).
+
+addMarketTime :-
+	getLevel(0, L, _),
+	(
+		(L >= 3)
+	->
+		addTime(1)
+	;
+		addTime(2)
+	).
