@@ -16,9 +16,6 @@ item(2, 'Carrot Seed').
 item(1, 'Corn Seed').
 item(0, 'Tomato Seed').
 item(0, 'Potato Seed').
-item(1, 'Chicken').
-item(0, 'Sheep').
-item(0, 'Cow').
 item(0, 'Level 2 Shovel').
 item(0, 'Level 2 Fishing Rod').
 
@@ -45,18 +42,20 @@ sellable('Potato', 80).
 sellable('Egg', 100).
 sellable('Wool Sack', 250).
 sellable('Milk Bucket', 375).
-sellable('Snelt', 75).
-sellable('Rainbob', 125).
-sellable('Arna', 225).
-sellable('Sharkshark', 350).
-sellable('Big Sharkshark', 475).
-sellable('Super Big Sharkshark', 600).
+sellable('Snelt', 50).
+sellable('Rainbob', 100).
+sellable('Arna', 175).
+sellable('Sharkshark', 250).
+sellable('Big Sharkshark', 350).
+sellable('Super Big Sharkshark', 500).
 
 plantable('Carrot Seed', 'c', 6).
+plantable('Corn Seed', 'n', 5).
 plantable('Tomato Seed', 't', 4).
 plantable('Potato Seed', 'a', 3).
 
 harvestable('C', 'Carrot').
+harvestable('N', 'Corn')
 harvestable('T', 'Tomato').
 harvestable('A', 'Potato').
 
@@ -74,15 +73,20 @@ takeGold(X) :-
 	Z is Y - X,
 	assertz(gold(Z)).
 	
-addItem(A, B) :- 
-	retract(item(X, B)),
-	C is X + A,
-	assertz(item(C, B)).
+addItem(Qty, Item) :- 
+	retract(item(X, Item)),
+	C is X + Qty,
+	assertz(item(C, Item)).
 
-removeItem(A, B) :- 
-	retract(item(X, B)),
-	C is X - A,
-	assertz(item(C, B)).
+removeItem(Qty, Item) :- 
+	retract(item(X, Item)),
+	C is X - Qty,
+	assertz(item(C, Item)).
+	
+addAnimal(Qty, Animal) :- 
+	retract(animal(X, Animal)),
+	C is X + Qty,
+	assertz(animal(C, Animal)).
 
 
 /* COMMAND inventory */
@@ -146,14 +150,14 @@ buy :-
 	write('0. [Exit Shop]'), nl, nl,
 	write('What do you want to buy? (Enter a Number) '), read(X), buySomething(X), !.
 buy :- buy.
-	
+
 buySomething(X) :- X is 1, cost(50, 'Carrot Seed').
 buySomething(X) :- X is 2, cost(50, 'Corn Seed').
 buySomething(X) :- X is 3, cost(50, 'Tomato Seed').
 buySomething(X) :- X is 4, cost(50, 'Potato Seed').
-buySomething(X) :- X is 5, cost(500, 'Chicken').
-buySomething(X) :- X is 6, cost(1000, 'Sheep').
-buySomething(X) :- X is 7, cost(1500, 'Cow').
+buySomething(X) :- X is 5, cost(500, 'chicken').
+buySomething(X) :- X is 6, cost(1000, 'sheep').
+buySomething(X) :- X is 7, cost(1500, 'cow').
 buySomething(X) :- X is 8, cost(300, 'Level 2 Shovel').
 buySomething(X) :- X is 9, cost(500, 'Level 2 Fishing Rod').
 
@@ -172,7 +176,13 @@ checkIfEnough(X, Z, I) :-
 	G >= C,
 	write('You have bought '), write(I), write(' '), write(Z), write('.'), nl,
 	write('You are charged '), write(C), write(' golds.'), nl, nl,
-	addItem(I, Z),
+	(
+		(Z == 'chicken'; Z == 'sheep'; Z == 'cow')
+	->
+		addAnimal(I, Z)
+	;
+		addItem(I, Z)
+	),
 	takeGold(C), !,
 	buy.
 
