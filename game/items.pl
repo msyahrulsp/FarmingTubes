@@ -48,6 +48,8 @@ sellable('Snelt', 75).
 sellable('Rainbob', 125).
 sellable('Arna', 225).
 sellable('Sharkshark', 350).
+sellable('Big Sharkshark', 475).
+sellable('Super Big Sharkshark', 600).
 
 plantable('Carrot Seed', 'c').
 plantable('Corn Seed', 'n').

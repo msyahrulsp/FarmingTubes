@@ -48,6 +48,7 @@ fish :-
    M = miss (pity); Jumlah ikan tidak spesial berturut-turut yang diperoleh
    C = Chance mendapatkan ikan (semakin tinggi level fishing akan semakin tinggi)
    */
+    (game_start(false) -> nl, msg_not_start(MSG), write(MSG), nl, !, fail; true),
     nearWater,
     haveFishingRod(L),
     L > 0,
@@ -76,18 +77,19 @@ fish :-
     miss(A),
     write('Missed Special Fish : '), write(A),nl,
     addItem(1,Fish),
-    fishing_time(Time),
-    addTime(Time),
 
     /* DOUBLE FISH! */
     random(Double),
     (
-        Double =< 0.01
+        Double =< 0.001
     ->
         nl, write('===DOUBLE FISH==='), nl, write(' YOU ARE ON FIRE!!'), nl, fish
     ;
-        true
-    ), !.
+        true,
+        writeDiaryEvent(7),
+        fishing_time(Time),
+        addTime(Time)
+    ),!.
 
 fish :-
     nearWater,
@@ -98,8 +100,14 @@ fish :-
     M1 is M+1,
     set_miss(M1),
     write('Missed Special Fish : '), write(M1),!,
+    writeDiaryEvent(7),
     fishing_time(Time),
     addTime(Time),!.
+
+fish :-
+    nearWater,
+    msg_have_no_fishing_rod(MSG),
+    write(MSG), nl, !.
 
 fish :-
     msg_fish_not_near(MSG), write(MSG), nl.
@@ -165,8 +173,7 @@ haveFishingRod(Level) :-
         retract(fishing_time(_)),
         asserta(fishing_time(3))
     ; 
-        Level is 0,
-        msg_have_no_fishing_rod(MSG), write(MSG), nl
+        Level is 0
     )).
 
 fishing_level_up :-
