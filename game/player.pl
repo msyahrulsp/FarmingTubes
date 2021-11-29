@@ -49,10 +49,10 @@ status :-
 	gold(K), write('Gold               : '), write(K), nl,
 	getLevel(0, B, I), write('Level              : '), write(B), nl,
 	write('Total Exp          : '), write(I), write(' / 600'), nl,
-	getLevel(1, C, D), write('Level Fishing      : '), write(C), nl,
-	write('Exp Fishing        : '), write(D), write(' / 600'), nl,
-	getLevel(2, E, F), write('Level Farming      : '), write(E), nl,
+	getLevel(1, E, F), write('Level Farming      : '), write(E), nl,
 	write('Exp Farming        : '), write(F), write(' / 600'), nl,
+	getLevel(2, C, D), write('Level Fishing      : '), write(C), nl,
+	write('Exp Fishing        : '), write(D), write(' / 600'), nl,
 	getLevel(3, G, H), write('Level Ranching     : '), write(G), nl,
 	write('Exp Ranching       : '), write(H), write(' / 600'), nl,
     write('============================================='), nl, !.
