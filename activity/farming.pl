@@ -52,7 +52,11 @@ harvest :-
     item(N, Name), retract(item(N, Name)),
     drop_rate(Rate),
     getLevel(2, L, _),
-    ( L >= 5 -> assertz(map_object(X, Y, '=')) ),
+    (
+        L >= 5 -> assertz(map_object(X, Y, '='))
+    ;
+        !
+    ),
     (
         Name == 'Carrot' -> Yield is 1 * Rate;
         Name == 'Corn' -> Yield is 2 * Rate;
