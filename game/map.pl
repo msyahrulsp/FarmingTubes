@@ -11,7 +11,7 @@ map_elmt(water, 'o').
 map_elmt(digged, '=').
 map_elmt(corn, 'c').
 map_elmt(tomato, 't').
-map_elmt(potato, 'p').
+map_elmt(potato, 'a').
 
 map_size(10).
 
@@ -35,6 +35,7 @@ map_generate :-
     asserta(map_object(4, 4, 'H')),
     asserta(map_object(4, 4, 'P')),
     asserta(map_object(5, 7, 'Q')),
+    asserta(map_object(5, 4, 'C')),
     map_size(M),
     map_generate_water(8, 3, 1, M).
 
@@ -122,17 +123,18 @@ onTile(Tile_name) :-
 % Farming
 canDig :-
     \+ (onTile(_)).
-    % map_object(X, Y, 'P'), retract(map_object(X, Y, 'P')),
-    % ( \+ map_object(X, Y, _)
-    % ->
-    %     asserta(map_object(X, Y, 'P')),
-    %     msg_dig(MSG), write(MSG), nl, !
-    % ;
-    %     asserta(map_object(X, Y, 'P')),
-    %     msg_dig_already(MSG), write(MSG), nl, !
-    % ).
 
 canPlant :-
     map_object(X, Y, 'P'),
     map_object(X, Y, Obj),
     map_elmt(digged, Obj).
+
+canHarvest :-
+    map_object(X, Y, 'P'), retract(map_object(X, Y, 'P')),
+    ( (map_object(X, Y, T), harvestable(T, _))
+    ->
+        asserta(map_object(X, Y, 'P'))
+    ;
+        asserta(map_object(X, Y, 'P')),
+        msg_harvest_cant(MSG), write(MSG), nl, !
+    ).

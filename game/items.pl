@@ -1,6 +1,7 @@
 :- dynamic(gold/1).
 :- dynamic(item/2).
-:- dynamic(plantable/2).
+:- dynamic(plantable/3).
+:- dynamic(harvestable/2).
 
 /* List Item, jumlah yang ada dalam inventory player */
 
@@ -51,15 +52,13 @@ sellable('Sharkshark', 350).
 sellable('Big Sharkshark', 475).
 sellable('Super Big Sharkshark', 600).
 
-plantable('Carrot Seed', 'c').
-plantable('Corn Seed', 'n').
-plantable('Tomato Seed', 't').
-plantable('Potato Seed', 'a').
+plantable('Carrot Seed', 'c', 6).
+plantable('Tomato Seed', 't', 4).
+plantable('Potato Seed', 'a', 3).
 
-harvestable('C').
-harvestable('N').
-harvestable('T').
-harvestable('A').
+harvestable('C', 'Carrot').
+harvestable('T', 'Tomato').
+harvestable('A', 'Potato').
 
 /* Prosedur */
 
