@@ -3,10 +3,10 @@
 :- dynamic(season/1).
 :- dynamic(weather/1).
 
-seasons(0, spring).
-seasons(1, summer).
-seasons(2, autumn).
-seasons(3, winter).
+seasons(0, 'Spring').
+seasons(1, 'Summer').
+seasons(2, 'Autumn').
+seasons(3, 'Winter').
 
 weathers(0, clear).
 weathers(1, sunny).
@@ -68,15 +68,18 @@ changeWeather :-
 checkSeason :-
 	day(X), season(S), seasons(S, Season),
 	(
-		X > 365 -> endGame;
-		X > 274, S \== 3 -> retractall(season(_)), assertz(season(3)), seasons(3, NSeason),
+		X > 365 -> !, endGame;
+		X > 274, S \== 3 -> retractall(season(_)), assertz(season(3)), seasons(3, NSeason), seasonalBonus,
 		nl, write(Season), write(' has come and gone. Now it is '), write(NSeason), write('.'), nl, nl;
-		X > 183, S \== 2 -> retractall(season(_)), assertz(season(2)), seasons(2, NSeason),
+		X > 183, S \== 2 -> retractall(season(_)), assertz(season(2)), seasons(2, NSeason), seasonalBonus,
 		nl, write(Season), write(' has come and gone. Now it is '), write(NSeason), write('.'), nl, nl;
-		X > 92, S \== 1 -> retractall(season(_)), assertz(season(1)), seasons(1, NSeason),
+		X > 92, S \== 1 -> retractall(season(_)), assertz(season(1)), seasons(1, NSeason), seasonalBonus,
 		nl, write(Season), write(' has come and gone. Now it is '), write(NSeason), write('.'), nl, nl;
 		true
 	), !.
+
+seasonalBonus :-
+	true.
 
 cropAddTime :-
 	crop(X, Y, S, T), NewT is T - 1,
@@ -97,4 +100,4 @@ endGame :-
 	assertz(game_start(false)), assertz(game_on(false)),
 	nl, write('As the day goes by you notice the first buds of Spring, and also a peculiar knocking on your fence.'), nl,
 	write('As you peer through your window, you realize that the Loan Sharks have come to claim your land.'), nl, nl,
-	write('You lost the game, try again next time'), nl.
+	write('You lost the game, try again next time'), nl, !, fail.

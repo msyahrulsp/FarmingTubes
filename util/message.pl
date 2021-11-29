@@ -78,7 +78,8 @@ msg_win :-
 	write('+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+'),nl,
 	write('|C|o|n|g|r|a|t|u|l|a|t|i|o|n|s|!|'),nl,
  	write('+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+'),nl,nl,
-	write('You have finally collected 20000 golds!'),nl.
+	write('You have finally collected 20000 golds!'),nl,
+	write('Now you can finally pay off your debt and live hapily.'),nl.
 
 /* Lowercase Conversion */
 toLower(X, Y) :-
