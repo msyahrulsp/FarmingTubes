@@ -4,7 +4,7 @@ dig :-
     canDig, map_object(X, Y, 'P'),
     assertz(map_object(X, Y, '=')), 
     msg_dig(MSG), write(MSG), nl,
-    add_farming_exp(6000),
+    add_farming_exp(45),
     digTime.
     !.
 
@@ -97,4 +97,6 @@ add_farming_exp(N) :-
         NewN is N
     ),
     NewExp is X + NewN,
-    retract(exp(X, farmer)), asserta(exp(NewExp, farmer)), !.
+    retract(exp(X, farmer)), asserta(exp(NewExp, farmer)), 
+    write('Your Farming Experience has increased by '), write(NewExp), write('.'), nl,
+    !.
