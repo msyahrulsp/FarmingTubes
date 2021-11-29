@@ -35,7 +35,6 @@ map_generate :-
     asserta(map_object(4, 4, 'H')),
     asserta(map_object(4, 4, 'P')),
     asserta(map_object(5, 7, 'Q')),
-    asserta(map_object(5, 4, 'C')),
     map_size(M),
     map_generate_water(8, 3, 1, M).
 

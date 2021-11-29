@@ -1,6 +1,6 @@
 :- dynamic(gold/1).
 :- dynamic(item/2).
-:- dynamic(plantable/3).
+:- dynamic(plantable/4).
 :- dynamic(harvestable/2).
 
 /* List Item, jumlah yang ada dalam inventory player */
@@ -49,10 +49,10 @@ sellable('Sharkshark', 250).
 sellable('Big Sharkshark', 350).
 sellable('Super Big Sharkshark', 500).
 
-plantable('Carrot Seed', 'c', 6).
-plantable('Corn Seed', 'n', 5).
-plantable('Tomato Seed', 't', 4).
-plantable('Potato Seed', 'a', 3).
+plantable('Carrot Seed', 'c', 2, 'C').
+plantable('Corn Seed', 'n', 10, 'N').
+plantable('Tomato Seed', 't', 8, 'T').
+plantable('Potato Seed', 'a', 10, 'A').
 
 harvestable('C', 'Carrot').
 harvestable('N', 'Corn').
@@ -116,7 +116,7 @@ inInven :-
 /* COMMAND throwItem */
 throwItem :-
 	inventory,
-	nl, write('[Enter 0 to Exit Shop]'), nl,
+	nl, write('[Enter 0 to Cancel]'), nl,
 	nl, write('What do you want to throw? (Example: \'Item Name\'.) '), read(I),
 	(
 		(I \== 0)

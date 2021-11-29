@@ -36,6 +36,7 @@ addDay(NUM) :-
 	retract(day(_)), assertz(day(Z)),
 	changeWeather,
 	writeDiaryDayStart,
+	\+(cropAddTime),
 	checkSeason, !.
 
 /* Fungsi untuk mengganti weather */
@@ -76,6 +77,20 @@ checkSeason :-
 		nl, write(Season), write(' has come and gone. Now it is '), write(NSeason), write('.'), nl, nl;
 		true
 	), !.
+
+cropAddTime :-
+	crop(X, Y, S, T), NewT is T - 1,
+	retract(crop(X, Y, S, T)),
+	(
+		T == 1
+	->
+		retract(map_object(X, Y, S)),
+		plantable(_, S, _, C),
+		assertz(map_object(X, Y, C))
+	;
+		assertz(crop(X, Y, S, NewT))
+	),
+	fail.
 
 endGame :-
 	retractall(game_start(_)), retractall(game_on(_)),

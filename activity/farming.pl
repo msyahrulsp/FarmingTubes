@@ -1,3 +1,5 @@
+:- dynamic(crop/4).
+
 dig :-
     canDig, map_object(X, Y, 'P'),
     assertz(map_object(X, Y, '=')), 
@@ -10,14 +12,14 @@ plant :-
     canPlant,
     \+(plantableInv),
     write('What do you want to plant? '), nl, read(I), nl,
-    item(X, I), X > 0, plantable(I, S, T1),
+    item(X, I), X > 0, plantable(I, S, T, _),
     NewX is X - 1,
     retract(item(X, I)),
     assertz(item(NewX, I)),
     map_object(PosX, PosY, 'P'),
     retract(map_object(PosX, PosY, '=')),
     assertz(map_object(PosX, PosY, S)),
-    asserta(crop(PosX, PosY, I, T1)),
+    asserta(crop(PosX, PosY, S, T)),
     msg_plant(MSG), write(MSG), write(I), nl,
     add_farming_exp(20),
     addTime(2),
@@ -31,14 +33,30 @@ harvest :-
     retract(map_object(X, Y, Obj)),
     msg_harvest(MSG), write(MSG), write(Name), nl,
     item(N, Name), retract(item(N, Name)),
-    NewN is N + 1,
+    (
+        Name == 'Carrot'
+    ->
+        NewN is N + 1
+    ;
+        Name == 'Corn'
+    ->
+        NewN is N + 2
+    ;
+        Name == 'Tomato'
+    ->
+        NewN is N + 2
+    ;
+        Name == 'Potato'
+    ->
+        NewN is N + 3
+    ),
     asserta(item(NewN, Name)),
     add_farming_exp(35),
     addTime(4),
     !.
 
 plantableInv :-
-    item(X, Y), plantable(Y, _, _), X > 0,
+    item(X, Y), plantable(Y, _, _, _), X > 0,
     write('- '), write(X), write(' '), write(Y), nl,
     fail.
 
