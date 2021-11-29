@@ -83,10 +83,10 @@ addJobExp(Job_number) :-
 getLevel(Job_number, Level, Remainder) :-
     jobSelect(Job_number, Job),
     (
-        Job == 'Base'
+        Job == base
     ->
         findall(X, exp(X, _), List),
-        sumlist(List, Exp)
+        sum_list(List, Exp)
     ;
         exp(Exp, Job)
     ),

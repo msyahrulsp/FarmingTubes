@@ -1,65 +1,14 @@
-% game_start belum di dynamic
-/* deprecated
 w :-
-    game_start(true), valid_move(0, -1),
-    map_elmt(player, P), map_object(X, Y, P), msg_move('W', MSG),
-    Move is Y - 1,
-    retract(map_object(X, Y, P)),
-    asserta(map_object(X, Move, P)),
-    write(MSG),
-    !.
-
-w :- game_start(true), \+valid_move(0, -1), msg_move('E', MSG), write(MSG), !.
-
-w :- game_start(false), msg_not_start(MSG), write(MSG), !.
+    move_player('W'), !.
 
 a :-
-    game_start(true), valid_move(-1, 0),
-    map_elmt(player, P), map_object(X, Y, P), msg_move('A', MSG),
-    Move is X - 1,
-    retract(map_object(X, Y, P)),
-    asserta(map_object(Move, Y, P)),
-    write(MSG),
-    !.
-
-a :- game_start(true), \+valid_move(-1, 0), msg_move('E', MSG), write(MSG), !.
-
-a :- game_start(false), msg_not_start(MSG), write(MSG), !.
+    move_player('A'), !.
 
 s :-
-    game_start(true), valid_move(0, 1),
-    map_elmt(player, P), map_object(X, Y, P), msg_move('S', MSG),
-    Move is Y + 1,
-    retract(map_object(X, Y, P)),
-    asserta(map_object(X, Move, P)),
-    write(MSG),
-    !.
-
-s :- game_start(true), \+valid_move(0, 1), msg_move('E', MSG), write(MSG), !.
-
-s :- game_start(false), msg_not_start(MSG), write(MSG), !.
+    move_player('S'), !.
 
 d :-
-    game_start(true), valid_move(1, 0),
-    map_elmt(player, P), map_object(X, Y, P), msg_move('D', MSG),
-    Move is X + 1,
-    retract(map_object(X, Y, P)),
-    asserta(map_object(Move, Y, P)),
-    write(MSG),
-    !.
-
-d :- game_start(true), \+valid_move(1, 0), msg_move('E', MSG), write(MSG), !.
-
-d :- game_start(false), msg_not_start(MSG), write(MSG), !.
-*/
-
-getDisplacement(Mov, Dx, Dy) :-
-    (
-        Mov == 'W' -> Dx is 0, Dy is -1;
-        Mov == 'A' -> Dx is -1, Dy is 0;
-        Mov == 'S' -> Dx is 0, Dy is 1;
-        Mov == 'D' -> Dx is 1, Dy is 0
-    ), !.
+    move_player('D'), !.
 
 move_player(Mov) :-
     (
@@ -80,14 +29,48 @@ move_player(Mov) :-
         msg_not_start(MSG), write(MSG)
     ).
 
-w :-
-    move_player('W'), !.
+getDisplacement(Mov, Dx, Dy) :-
+    (
+        Mov == 'W' -> Dx is 0, Dy is -1;
+        Mov == 'A' -> Dx is -1, Dy is 0;
+        Mov == 'S' -> Dx is 0, Dy is 1;
+        Mov == 'D' -> Dx is 1, Dy is 0
+    ), !.
 
-a :-
-    move_player('A'), !.
+/* Funtion Fairy:
+   Alur Umum:
+   - random > 90 - 10 * level -> teleport
+   -                          -> nothing */
+fairy :-
+    random(0, 100, X), getLevel(0, Level, _), Chance is 95 - 5 * Level,
+    (
+        X >= Chance
+    ->
+        nl, write('You have been visited by the sleep fairy, choose a tile to move to.'), nl,
+        repeat,
+        nl, write('X coordinates: '), nl, 
+        getCoord(Cx),
+        nl, write('Y coordinates: '), nl,
+        getCoord(Cy),
+        (
+            \+ (map_object(Cx, Cy, 'o'))
+        ->
+            nl, write('With a flick of her wand, you have been teleported to ('), write(Cx), write(', '), write(Cy), write(').'), nl,
+            retractall(map_object(_, _, 'P')), asserta(map_object(Cx, Cy, 'P')), 
+            writeDiaryEvent(9), !
+        ;
+            nl, write('You can\'t teleport into the water.'), nl, fail
+        )
+    ;
+        true
+    ), !.
 
-s :-
-    move_player('S'), !.
-
-d :-
-    move_player('D'), !.
+getCoord(X) :-
+    map_size(M),
+    repeat,
+    read(X),
+    (
+        integer(X), X > 0, X =< M -> !
+    ;
+        nl, write('Wrong coordinate input, (please input 1 - '), write(M), write(')'), nl, fail
+    ).

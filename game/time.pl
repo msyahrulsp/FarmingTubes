@@ -11,8 +11,8 @@ seasons(3, winter).
 weathers(0, clear).
 weathers(1, sunny).
 weathers(2, cloudy).
-weathers(3, precipitation).
-weathers(4, storm).
+weathers(3, rainy).
+weathers(4, stormy).
 
 time(12).
 day(1).
@@ -32,26 +32,54 @@ addTime(NUM) :-
 
 addDay(NUM) :-
 	day(X), Z is X + NUM,
+	writeDiaryDayEnd,
 	retract(day(_)), assertz(day(Z)),
-	% changeWeather,
+	changeWeather,
+	writeDiaryDayStart,
 	checkSeason, !.
 
 /* Fungsi untuk mengganti weather */
-% changeWeather :-
-% 	weather(X),
-% 	(
-% 		X == 0
-% 	->
-
-% 	)
+changeWeather :-
+	weather(X), random(1, 100, Rdm),
+	(
+		Rdm < 51, X == 0
+	->
+		Parity is Rdm mod 2,
+		Z is 2 - Parity,
+		retractall(weather(_)), assertz(weather(Z))
+	;
+		Rdm < 51, X == 2
+	->
+		retractall(weather(_)), assertz(weather(3))
+	;
+		Rdm < 51, X == 3
+	->
+		retractall(weather(_)), assertz(weather(4))
+	;
+		Rdm > 50
+	->
+		retractall(weather(_)), assertz(weather(0))
+	;
+		true
+	).
 
 /* Fungsi untuk mengganti season */
 checkSeason :-
-	day(X), season(S),
+	day(X), season(S), seasons(S, Season),
 	(
 		X > 365 -> endGame;
-		X > 274, S \== 3 -> retractall(season(_)), assertz(season(3));
-		X > 183, S \== 2 -> retractall(season(_)), assertz(season(2));
-		X > 92, S \== 1 -> retractall(season(_)), assertz(season(1));
+		X > 274, S \== 3 -> retractall(season(_)), assertz(season(3)), seasons(3, NSeason),
+		nl, write(Season), write(' has come and gone. Now it is '), write(NSeason), write('.'), nl, nl;
+		X > 183, S \== 2 -> retractall(season(_)), assertz(season(2)), seasons(2, NSeason),
+		nl, write(Season), write(' has come and gone. Now it is '), write(NSeason), write('.'), nl, nl;
+		X > 92, S \== 1 -> retractall(season(_)), assertz(season(1)), seasons(1, NSeason),
+		nl, write(Season), write(' has come and gone. Now it is '), write(NSeason), write('.'), nl, nl;
 		true
 	), !.
+
+endGame :-
+	retractall(game_start(_)), retractall(game_on(_)),
+	assertz(game_start(false)), assertz(game_on(false)),
+	nl, write('As the day goes by you notice the first buds of Spring, and also a peculiar knocking on your fence.'), nl,
+	write('As you peer through your window, you realize that the Loan Sharks have come to claim your land.'), nl, nl,
+	write('You lost the game, try again next time'), nl.

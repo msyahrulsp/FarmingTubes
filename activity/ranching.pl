@@ -14,6 +14,7 @@ produce('sheep', 'Wool Sack', 1).
    - tidak berada di ranch -> tampilin pesan not in ranch
    - berada di ranch -> tampilin binatang -> harvest/exit */
 ranch :-
+    (game_start(false) -> nl, msg_not_start(MSG), write(MSG), nl, !, fail; true),
     (
         onTile(ranch)
     ->
