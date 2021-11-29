@@ -1,5 +1,6 @@
 :- dynamic(gold/1).
 :- dynamic(item/2).
+:- dynamic(plantable/2).
 
 /* List Item, jumlah yang ada dalam inventory player */
 
@@ -48,6 +49,15 @@ sellable('Rainbob', 125).
 sellable('Arna', 225).
 sellable('Sharkshark', 350).
 
+plantable('Carrot Seed', 'c').
+plantable('Corn Seed', 'n').
+plantable('Tomato Seed', 't').
+plantable('Potato Seed', 'a').
+
+harvestable('C').
+harvestable('N').
+harvestable('T').
+harvestable('A').
 
 /* Prosedur */
 

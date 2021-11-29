@@ -115,3 +115,21 @@ nearWater :-
 
 onTile(Tile_name) :-
     map_elmt(player, P), map_object(X, Y, P), map_object(X, Y, Tile), map_elmt(Tile_name, Tile).
+
+% Farming
+canDig :-
+    map_object(X, Y, 'P'), retract(map_object(X, Y, 'P')),
+    ( \+ map_object(X, Y, _)
+    ->
+        asserta(map_object(X, Y, 'P')),
+        msg_dig(MSG), write(MSG), nl, !
+    ;
+        asserta(map_object(X, Y, 'P')),
+        msg_dig_already(MSG), write(MSG), nl, !
+    ).
+
+canPlant :-
+    map_object(X, Y, 'P'),
+    map_object(X, Y, Obj),
+    map_elmt(digged, Obj1),
+    Obj == Obj1.

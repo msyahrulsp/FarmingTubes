@@ -21,6 +21,7 @@ startGame :-
 		game_on(false)
 	->
 		% initialisasi ulang modul, sama dengan consult ulang tapi lebih gampang, jadi tinggal exit -> startGame
+		['./activity/farming.pl'],
 		['./activity/fish.pl'],
 		['./activity/house.pl'],
 		['./activity/move.pl'],

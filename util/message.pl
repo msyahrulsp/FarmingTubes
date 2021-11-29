@@ -12,6 +12,10 @@ msg_not_start('Game belum dimulai. Silahkan cek \'help\' untuk melihat list comm
 msg_fish_not_near('Kamu sedang tidak dekat kolam. Silahkan pergi ke dekat kolam terlebih dahulu.').
 msg_have_no_fishing_rod('Kamu tidak punya fishing rod.').
 
+msg_dig('You digged the tile').
+msg_dig_already('Go dig on other tile.').
+msg_plant_cant('Can only plant on digged tile.').
+
 msg_title :-
     write(' _   _                           _   '), nl,
     write('| | | | __ _ _ ____   _____  ___| |_ '), nl,
