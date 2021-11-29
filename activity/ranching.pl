@@ -42,7 +42,7 @@ ranch :-
    - Ada binatang -> tampilin semua dengan metode failure driven */
 listAnimals :-
     \+ (animal(Num, _), Num \== 0),
-    nl, write('You have no animals yet, buy them from the shop.'), !.
+    nl, write('You have no animals yet, buy them from the market.'), !.
 
 listAnimals :-
     animal(X, Y), X > 0,
