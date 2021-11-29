@@ -74,7 +74,7 @@ addJobExp(Job_number) :-
     Added is Exp + Inc,
     retractall(exp(_, Job)),
     assertz(exp(Added, Job)),
-    write('Your '), write(Job), write(' experience has increased by '), write(Inc), write('.'), nl, fishing_level_up.
+    write('Your '), write(Job), write(' experience has increased by '), write(Inc), write('.'), nl, fishing_level_up, !.
 
 /* Function get level of job:
    Alur umum:

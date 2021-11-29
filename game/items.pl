@@ -96,7 +96,7 @@ removeItem(Qty, Item) :-
 addAnimal(Qty, Animal) :- 
 	retract(animal(X, Animal)),
 	C is X + Qty,
-	assertz(animal(C, Animal)).
+	assertz(animal(C, Animal)), !.
 
 
 /* COMMAND inventory */
@@ -146,7 +146,25 @@ market :-
 	->
 		write('What do you want to do?'), nl,
 		write('1. Buy'), nl,
-		write('2. Sell')
+		write('2. Sell'), nl, nl,
+        repeat,
+        write('What will you do? (To exit enter "0" or "exit")'), nl,
+        read(Pin), nl,
+        (
+            (Pin is 0; \+(integer(Pin)), toLower(Pin, In), atom_chars(In, Code), atom_chars(exit, Code))
+		->
+            write('You have exited the marketplace.'), nl, !
+		;
+			Pin == 1
+		->
+			buy, !
+		;
+			Pin == 2
+		->
+			sell, !
+		;
+			write('Wrong input number. (Enter numbers 1 or 2)'), nl, fail
+		)
 	;
         nl, write('You are not at the marketplace.'), nl, !, fail
 	).
@@ -158,6 +176,7 @@ buy :-
 	(
 		onTile(marketplace)
 	->
+		write('Buy Menu:'), nl,
 		write('1. Carrot Seed (50 golds)'), nl,
 		write('2. Corn Seed (50 golds)'), nl,
 		write('3. Tomato Seed (50 golds)'), nl,
@@ -225,23 +244,31 @@ sell :-
 	(
 		onTile(marketplace)
 	->
-		write('Here are the items in your inventory'), nl,
+		write('Here are the items in your inventory:'), nl, !,
 		\+(sellableInInven),
-		nl, write('[Enter 0 to Cancel]'), nl,
-		write('What do you want to sell? (Example: \'Item Name\'.) '), read(I),
+		repeat,
+		nl, write('[Enter 0 to Cancel] '),
+		nl, write('What do you want to sell? (Example: \'Item Name\'.) '), nl, read(I),
 		(
-			(I \== 0)
+			sellable(I, V)
 		->
-			item(X, I), X > 0, sellable(I, V),
+			item(X, I), X > 0,
 			sellHowMuch(X, I, V)
 		;
-			% [Cancel Selling]
+			(I \== 0)
+		->
+			nl, write('Wrong input. Please input a string.'), nl, fail
+		;
 			!
 		)
 	;
         nl, write('You are not at the marketplace.'), nl, !, fail
 	).
 sell :- sell.
+
+sellableInInven :-
+	\+ (item(X, Y), sellable(Y, _), X > 0),
+	write('No sellable items in inventory.'), nl, nl, !.
 
 sellableInInven :-
 	item(X, Y), sellable(Y, _), X > 0,

@@ -79,7 +79,40 @@ checkSeason :-
 	), !.
 
 seasonalBonus :-
-	true.
+	season(X),
+	(
+		X == 0 % Spring -> Summer
+	->
+		nl, write('Whilst nearing the end of Spring, your animals have created some offspring.'), nl, nl,
+		\+ (seasonBreed(1))
+	;
+		X == 1 % Summer -> Autumn
+	->
+		nl, write('Whilst nearing the end of Summer, some of the animals couldn\'t stand a heatstroke and died.'), nl, nl,
+		\+ (seasonBreed(0))
+	;
+		X == 2 % Autumn -> Winter
+	->
+		nl, write('Whilst nearing the end of Autumn, went into hybernation.'), nl, nl,
+		\+ (hybernate)
+	).
+
+seasonBreed(X) :-
+	(
+		X == 1
+	->
+		animal(Num, Animal), Bred is Num // 2, Total is Num + Bred,
+		retractall(animal(_, Animal)), asserta(animal(Total, Animal)), fail
+	;
+		X == 0
+	->
+		animal(Num, Animal), Dead is Num // 3, Total is Num - Dead,
+		retractall(animal(_, Animal)), asserta(animal(Total, Animal)), fail
+	).
+	
+hybernate :-
+	day(D), produce(X, Y, _), getLevel(3, L, _), Zx is D + 30 - L,
+	retractall(produce(X, Y, _)), asserta(produce(X, Y, Zx)), fail.
 
 cropAddTime :-
 	crop(X, Y, S, T), NewT is T - 1,

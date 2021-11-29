@@ -14,8 +14,13 @@ produce('sheep', 'Wool Sack', 1).
    - tidak berada di ranch -> tampilin pesan not in ranch
    - berada di ranch -> tampilin binatang -> harvest/exit */
 ranch :-
-    (game_start(false) -> nl, msg_not_start(MSG), write(MSG), nl, !, fail; true),
+    (game_start(false) -> nl, msg_not_start(MSG), write(MSG), nl, !, fail; true),  weather(Weather),
     (
+        % Jika Weather Stormy
+        onTile(ranch), Weather == 4
+    ->
+        nl, write('The weather is stormy and the animals are frightened. You can\'t ranch in this weather!'), nl, !, fail
+    ;
         onTile(ranch)
     ->
         nl, write('Welcome to the ranch, you have:'), nl,
