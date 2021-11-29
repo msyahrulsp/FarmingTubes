@@ -25,7 +25,6 @@ startGame :-
 		['./activity/house.pl'],
 		['./activity/move.pl'],
 		['./activity/ranching.pl'],
-		['./game/inventory.pl'],
 		['./game/items.pl'],
 		['./game/map.pl'],
 		['./game/player.pl'],

@@ -14,6 +14,7 @@ quests('corn', 2, 'nila', 2, 'egg', 2).
    - Jika tidak dipanggil di tile quest -> menjabarkan current quest
    */
 quest :-
+    (game_start(false) -> nl, msg_not_start(MSG), write(MSG), nl, !, fail; true),
     (onTile(quest) -> getQuest; displayQuest), !.
 
 /* Funtion to get new Quest
@@ -56,7 +57,9 @@ questComplete :-
         % Success message
         write('You have given the required items to questgiver.'), nl, nl,
         write('Your base experience has risen by '), write(Inc), write('.'), nl,
-        write('You recieved '), write(Get), write(' gold.'), nl
+        write('You recieved '), write(Get), write(' gold.'), nl,
+        % Write diary
+        writeDiaryEvent(0)
     ;
         % Fail message
         write('You tried to submit your items, but...'), nl, nl,

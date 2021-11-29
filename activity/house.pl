@@ -115,6 +115,10 @@ writeDiary :-
 writeDiaryEvent(Event) :-
 	day(X), time(Y),
 	(
+		Event == 0
+	->
+		String = 'I finished a quest.'
+	;
 		Event == 1
 	->
 		String = 'I dug some farm land.'

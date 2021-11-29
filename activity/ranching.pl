@@ -94,7 +94,8 @@ animalHarvest(In) :-
         ), write('.'), nl, nl,
         addTime(3),
         cooldown(X),
-        addJobExp(3)
+        addJobExp(3),
+        writeDiaryEvent(6)
     ;
         % Jika tidak ada
         plural(X, Xs), 
