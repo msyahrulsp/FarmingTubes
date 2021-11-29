@@ -4,7 +4,7 @@ dig :-
     canDig, map_object(X, Y, 'P'),
     assertz(map_object(X, Y, '=')), 
     msg_dig(MSG), write(MSG), nl,
-    add_farming_exp(15),
+    add_farming_exp(6000),
     digTime.
     !.
 
@@ -21,37 +21,48 @@ plant :-
     assertz(map_object(PosX, PosY, S)),
     asserta(crop(PosX, PosY, S, T)),
     msg_plant(MSG), write(MSG), write(I), nl,
-    add_farming_exp(20),
+    add_farming_exp(65),
     addTime(2),
     !.
 
 plant :-
     msg_plant_cant(MSG), write(MSG), nl.
 
+drop_rate(Rate) :-
+    getLevel(2, L, _),
+    (
+        L == 1 -> Max is 45;
+        L == 2 -> Max is 35;
+        L == 3 -> Max is 15;
+        L == 4 -> Max is 8;
+        L >= 5 -> Max is 3
+    ),
+    random(1, Max, Num),
+    (
+        Num == 1
+    ->
+        Rate is 2
+    ;
+        Rate is 1
+    ).
+
 harvest :-
     canHarvest, map_object(X, Y, Obj), harvestable(Obj, Name),
     retract(map_object(X, Y, Obj)),
-    msg_harvest(MSG), write(MSG), write(Name), nl,
     item(N, Name), retract(item(N, Name)),
+    drop_rate(Rate),
+    getLevel(2, L, _),
+    ( L >= 5 -> assertz(map_object(X, Y, '=')) ),
     (
-        Name == 'Carrot'
-    ->
-        NewN is N + 1
-    ;
-        Name == 'Corn'
-    ->
-        NewN is N + 2
-    ;
-        Name == 'Tomato'
-    ->
-        NewN is N + 2
-    ;
-        Name == 'Potato'
-    ->
-        NewN is N + 3
+        Name == 'Carrot' -> Yield is 1 * Rate;
+        Name == 'Corn' -> Yield is 2 * Rate;
+        Name == 'Tomato' -> Yield is 2 * Rate;
+        Name == 'Potato' -> Yield is 3 * Rate
     ),
+    NewN is N + Yield,
     asserta(item(NewN, Name)),
-    add_farming_exp(35),
+    msg_harvest(MSG), write(MSG), write(Yield), write(' '), write(Name), nl,
+    add_farming_exp(80),
     addTime(4),
     !.
 
@@ -70,9 +81,9 @@ digTime :-
     ; (
         L1 > 0
     -> 
-        addTime(3)
+        addTime(2)
     ; 
-        addTime(6)
+        addTime(4)
     )),
     !.
 

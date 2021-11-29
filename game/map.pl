@@ -17,7 +17,8 @@ map_size(10).
 
 map_generate_water(NX, 0, _, Y) :- 
     NewY is Y - 1,
-    map_generate_water(NX, 3, 1, NewY).
+    map_size(M), Col is M // 2,
+    map_generate_water(NX, Col, 1, NewY).
 
 map_generate_water(0, _, _, _) :- !.
 
@@ -36,7 +37,9 @@ map_generate :-
     asserta(map_object(4, 4, 'P')),
     asserta(map_object(5, 7, 'Q')),
     map_size(M),
-    map_generate_water(8, 3, 1, M).
+    Row is (M * 2) - 7,
+    Col is M // 2,
+    map_generate_water(Row, Col, 1, M).
 
 % Border kiri
 map_draw(X, Y) :-
