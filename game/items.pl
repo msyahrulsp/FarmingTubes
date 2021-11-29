@@ -28,10 +28,12 @@ item(0, 'Potato').
 item(0, 'Egg').
 item(0, 'Wool Sack').
 item(0, 'Milk Bucket').
-item(0, 'C Fish').
-item(0, 'B Fish').
-item(0, 'A Fish').
-item(0, 'S Fish').
+item(0, 'Snelt').
+item(0, 'Rainbob').
+item(0, 'Arna').
+item(0, 'Sharkshark').
+item(0, 'Big Sharkshark').
+item(0, 'Super Big Sharkshark').
 
 /* Nama Item, Sell Price */
 sellable('Carrot', 100).
@@ -41,10 +43,10 @@ sellable('Potato', 80).
 sellable('Egg', 100).
 sellable('Wool Sack', 250).
 sellable('Milk Bucket', 375).
-sellable('C Fish', 75).
-sellable('B Fish', 125).
-sellable('A Fish', 225).
-sellable('S Fish', 350).
+sellable('Snelt', 75).
+sellable('Rainbob', 125).
+sellable('Arna', 225).
+sellable('Sharkshark', 350).
 
 
 /* Prosedur */

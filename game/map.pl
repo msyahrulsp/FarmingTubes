@@ -107,8 +107,11 @@ valid_move(DX, DY) :-
 % Locators
 nearWater :-
     map_object(Px, Py, 'P'), map_object(Wx, Wy, 'o'),
-    (Px == Wx + 1; Px == Wx - 1),
-    (Py == Wy + 1; Py == Wy - 1).
+    Px >= Wx - 1, Px =< Wx + 1,
+    Py >= Wy - 1, Py =< Wy + 1.
+
+    /*(Px =:= Wx + 1; Px =:= Wx - 1),
+    (Py =:= Wy + 1; Py =:= Wy - 1).*/
 
 onTile(Tile_name) :-
     map_elmt(player, P), map_object(X, Y, P), map_object(X, Y, Tile), map_elmt(Tile_name, Tile).

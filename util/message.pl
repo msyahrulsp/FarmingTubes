@@ -10,6 +10,7 @@ msg_start('Game sedang dimulai. Silahkan cek \'help\' untuk melihat list command
 msg_not_start('Game belum dimulai. Silahkan cek \'help\' untuk melihat list command.').
 
 msg_fish_not_near('Kamu sedang tidak dekat kolam. Silahkan pergi ke dekat kolam terlebih dahulu.').
+msg_have_no_fishing_rod('Kamu tidak punya fishing rod.').
 
 msg_title :-
     write(' _   _                           _   '), nl,

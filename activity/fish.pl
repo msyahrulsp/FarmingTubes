@@ -1,6 +1,8 @@
 :- dynamic(miss/1).
 :- dynamic(chance/2).
 :- dynamic(bonus_chance/1).
+:- dynamic(fishing_time/1).
+:- dynamic(fishing_level/1).
 
 fish_type(1,'Snelt','C').
 fish_type(2,'Rainbob','B').
@@ -19,6 +21,10 @@ chance(1,0.5).
 bonus_chance(0).
 
 miss(0).
+
+fishing_level(1).
+
+fishing_time(3).
 
 set_miss(X) :-
 % untuk set nilai miss
@@ -43,6 +49,8 @@ fish :-
    C = Chance mendapatkan ikan (semakin tinggi level fishing akan semakin tinggi)
    */
     nearWater,
+    haveFishingRod(L),
+    L > 0,
     random(R),
     bonus_chance(BC),
     BonusChance is 1 + BC,
@@ -67,6 +75,9 @@ fish :-
         set_miss(M1)),
     miss(A),
     write('Missed Special Fish : '), write(A),nl,
+    addItem(1,Fish),
+    fishing_time(Time),
+    addTime(Time),
 
     /* DOUBLE FISH! */
     random(Double),
@@ -80,11 +91,15 @@ fish :-
 
 fish :-
     nearWater,
+    haveFishingRod(L),
+    L > 0,
     write('You got nothing!'), nl,
     miss(M),
     M1 is M+1,
     set_miss(M1),
-    write('Missed Special Fish : '), write(M1).
+    write('Missed Special Fish : '), write(M1),!,
+    fishing_time(Time),
+    addTime(Time),!.
 
 fish :-
     msg_fish_not_near(MSG), write(MSG), nl.
@@ -123,11 +138,53 @@ increase_chance_level :-
     write('Chance '), fish_type(3,Fish3,_), write(Fish3), write(' increased from '), format('~2f',[C3]), write(' to '), format('~2f~n',[Chance3]),
     write('Chance '), fish_type(4,Fish4,_), write(Fish4), write(' increased from '), format('~2f',[C4]), write(' to '), format('~2f~n',[Chance4]).
 
-bonus_chance_fishing_rod(Level) :-
+bonus_chance_fishing_rod :-
 /* KAMUS
   Level = Level Fishing Road 
   Ch = Bonus Chance kalau pake Fishing Road level >1 */
+    haveFishingRod(Level),
+    Level > 0,
     Ch is float(Level-1)*0.005,
     retract(bonus_chance(_)),
     asserta(bonus_chance(Ch)).
-    
+
+haveFishingRod(Level) :-
+    % Level = level minimal fishing rod, 0 jika tidak punya
+    item(L1,'Level 1 Fishing Rod'),
+    item(L2,'Level 2 Fishing Rod'),
+    (
+        L2 > 0
+    ->
+        Level is 2,
+        retract(fishing_time(_)),
+        asserta(fishing_time(2))
+    ;(
+        L1 > 0
+    -> 
+        Level is 1,
+        retract(fishing_time(_)),
+        asserta(fishing_time(3))
+    ; 
+        Level is 0,
+        msg_have_no_fishing_rod(MSG), write(MSG), nl
+    )).
+
+fishing_level_up :-
+    /* Alur:
+        Jika level naik, chance naik
+        Jika level tidak naik, tidak terjadi apa-apa
+    */
+    fishing_level(Level),
+    getLevel(1,UpdatedLevel,_),
+    (
+        UpdatedLevel > Level
+    ->
+        NewLevel is Level+1,
+        retract(fishing_level(_)),
+        asserta(fishing_level(NewLevel)),
+        write('Fishing Level Up! Chance Increased!'),nl,
+        increase_chance_level,nl,nl,
+        fishing_level_up
+    ;
+        true
+    ).
